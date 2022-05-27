@@ -1,6 +1,6 @@
-# webpack 学习
+# build-my-own-x
 
-## lerna
+## 前置知识：lerna
 
 > 前往 [lerna](https://github.com/lerna/lerna) 查看官方文档，下面做一个简易入门。
 
@@ -92,3 +92,7 @@ yarn workspace create-react-app add commander
 ### lerna link
 
 建立软链，等价于 `npm link`
+
+## webpack: build-my-own-pack
+
+> [窥探原理：手写一个 JavaScript 打包器](packages/build-my-own-pack/README.md)

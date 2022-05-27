@@ -9,7 +9,7 @@ class StartCompilePlugin {
 
 class CompileDonePlugin {
   apply(compiler) {
-    compiler.hooks.compile.tap('compile done', () => {
+    compiler.hooks.done.tap('compile done', () => {
       console.log('结束编译 ...')
     })
   }

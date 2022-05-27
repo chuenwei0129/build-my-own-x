@@ -5,10 +5,6 @@
   "keywords": [],
   "author": "chuenwei0129 <chuenwei0129@gmail.com>",
   "license": "ISC",
-  "bin": {
-    "c-pack": "lib/build-my-own-pack.js"
-  },
-  "main": "lib/build-my-own-pack.js",
   "directories": {
     "lib": "lib",
     "test": "__tests__"
@@ -27,6 +23,10 @@
     "url": "https://github.com/chuenwei0129/c-pack/issues"
   },
   "homepage": "https://github.com/chuenwei0129/c-pack#readme",
+  "main": "lib/build-my-own-pack.js",
+  "bin": {
+    "c-pack": "lib/build-my-own-pack.js"
+  },
   "dependencies": {
     "@babel/generator": "^7.18.2",
     "@babel/parser": "^7.18.3",
