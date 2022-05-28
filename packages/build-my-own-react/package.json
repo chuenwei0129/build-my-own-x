@@ -5,7 +5,7 @@
   "keywords": [],
   "author": "chuenwei0129 <chuenwei0129@gmail.com>",
   "license": "ISC",
-  "main": "lib/build-my-own-react.js",
+  "main": "lib/creact.js",
   "directories": {
     "lib": "lib",
     "test": "__tests__"

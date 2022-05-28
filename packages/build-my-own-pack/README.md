@@ -2,15 +2,27 @@
 
 ## Usage
 
-在 `build-my-own-pack` 目录执行 `npm link`
+**在 `build-my-own-pack` 目录：**
 
-然后在 `my-pack-demo` 目录执行 `npm link`
+```sh
+npm link
+```
+
+**然后在 `my-pack-demo` 目录：**
+
+```sh
+npm link build-my-own-pack
+```
 
 就可以在 `my-pack-demo` 目录执行 `c-pack` 命令进行打包了。
 
 还可以在 `my-pack-demo` 下的 `dist` 目录中测试打包结果。
 
 ## 实现
+
+### 原理
+
+> [窥探 webpack 原理](https://github.com/chuenwei0129/awesome-me/blob/master/engineering/packorigin.md)
 
 ### 依赖
 
