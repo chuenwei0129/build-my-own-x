@@ -27,9 +27,12 @@ export class DomElementUnit extends Unit {
       } else if (/^on[A-Z]/.test(key)) {
         // 事件处理
         const eventName = key.slice(2).toLowerCase()
-        // 事件挂在 document 上，也可挂在别处
-        document.addEventListener(eventName, val)
-        // type.addEventListener(eventName, val)
+        // 事件可以挂在 document 上再处理
+        // document.addEventListener(eventName, val)
+        // 因为此时生成的 react 元素还未挂载到 root 节点，所以需要异步处理
+        setTimeout(() => {
+          document.querySelector(`${type}`).addEventListener(eventName, val)
+        })
       } else if (key === 'children') {
         val.forEach((el, idx) => {
           // 给每个渲染单元节点加索引

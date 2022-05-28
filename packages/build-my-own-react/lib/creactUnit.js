@@ -1,3 +1,4 @@
+import { ComponentUnit } from './ComponentUnit.js'
 import { ReactElement } from './creactElement.js'
 import { DomElementUnit } from './DomElementUnit.js'
 import { TextUnit } from './TextUnit.js'
@@ -16,7 +17,9 @@ export function createReactUnit(reactElement) {
   if (reactElement instanceof ReactElement && typeof reactElement.type === 'string') {
     return new DomElementUnit(reactElement)
   }
-  if (reactElement instanceof Element && typeof reactElement.type === 'function') {
+
+  // 对应：React.createElement(Counter, {}) type 为组件
+  if (reactElement instanceof ReactElement && typeof reactElement.type === 'function') {
     return new ComponentUnit(reactElement)
   }
 }

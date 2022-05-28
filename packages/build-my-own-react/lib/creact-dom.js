@@ -1,8 +1,9 @@
 import { createReactUnit } from './creactUnit.js'
 
 const root_react_id = '0'
+
 // 注册自定义 mounted 事件
-// const event = new Event('mounted')
+const event = new Event('mounted')
 
 function render(reactElement, container) {
   // 创建对应的 react 单元（三种）
@@ -15,8 +16,8 @@ function render(reactElement, container) {
   // 挂载、这里用 innerHTML 模拟
   container.innerHTML = reactDomString
 
-  // 渲染完毕触发 mounted 事件
-  // document.dispatchEvent(event)
+  // 挂载 dom 完毕触发 mounted 事件
+  document.dispatchEvent(event)
 }
 
 export default { render }
