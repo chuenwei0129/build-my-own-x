@@ -8,7 +8,7 @@ export class TextUnit extends Unit {
     return `<span data-react_id=${this._react_id}>${this._currentReactElement}</span>`
   }
 
-  // update(nextReactElement) {
-  //   document.querySelector(`[data-reactid="${this._reactid}"]`).textContent = nextReactElement
-  // }
+  update(nextReactElement) {
+    document.querySelector(`[data-react_id="${this._react_id}"]`).textContent = nextReactElement
+  }
 }

@@ -2,7 +2,7 @@
 
 ## react: build-my-own-react
 
-> [手写迷你 react 15](packages/build-my-own-react/README.md)
+> [温故知新：手写迷你 react 15](packages/build-my-own-react/README.md)
 
 ## webpack: build-my-own-pack
 

@@ -35,11 +35,10 @@ class Counter extends React.Component {
     // this.state = { flag: true }
   }
   handleClick = () => {
-    alert('hello world')
-    // this.setState({ count: this.state.count + 1 })
+    this.setState({ count: this.state.count + 1 })
   }
-  componentWillMount() {
-    console.log('componentWillMount run')
+  componentWillUpdate() {
+    console.log('componentWillUpdate run')
   }
   componentDidMount() {
     console.log('componentDidMount run')
@@ -53,16 +52,13 @@ class Counter extends React.Component {
   // }
   render() {
     console.log('render run')
-
     const h1 = React.createElement('h1', { style: { color: 'yellow' } }, this.props.name)
-
     const counter = React.createElement(
       'p',
       { style: { color: (this.state.count & 1) === 0 ? 'red' : 'blue' } },
       this.state.count
     )
     const btn = React.createElement('button', { onClick: this.handleClick }, ' + ')
-
     // 根 div 元素的 react_id 为 '0'
     return React.createElement(
       'div',
@@ -71,7 +67,7 @@ class Counter extends React.Component {
       counter,
       btn
     )
-    // return this.state.count
+    return this.state.count
     // const list1 = React.createElement(
     //   'ul',
     //   null,
