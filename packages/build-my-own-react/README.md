@@ -34,7 +34,7 @@ ReactDOM.render('hello world', document.getElementById('root'))
 
 ### build-my-own-react/lib
 
-**`creact-dom.js`：**
+**`creact-dom.js`:**
 
 ```js
 // creact-dom.js
@@ -58,7 +58,7 @@ function render(reactElement, container) {
 export default { render }
 ```
 
-**creactUnit.js：**
+**creactUnit.js:**
 
 ```js
 // creactUnit.js
@@ -73,7 +73,7 @@ export function createReactUnit(reactElement) {
 }
 ```
 
-**TextUnit.js：**
+**TextUnit.js:**
 
 ```js
 // TextUnit.js
@@ -89,7 +89,7 @@ export class TextUnit extends Unit {
 }
 ```
 
-**Unit.js：**
+**Unit.js:**
 
 ```js
 // Unit.js
@@ -108,5 +108,151 @@ export class Unit {
 
 ## 渲染 DOM 元素流程
 
-## 渲染组件流程
+### 渲染页面如下
 
+![](https://raw.githubusercontent.com/chuenwei0129/my-picgo-repo/master/fe-engineering/SCR-20220528-nqw.png)
+
+### my-react-demo/index.js
+
+```js
+import ReactDOM from '../../packages/build-my-own-react/lib/creact-dom.js'
+import React from '../../packages/build-my-own-react/lib/creact.js'
+
+// 分析：
+// jsx 编译为 React.createElement()
+// render 接受 React.createElement() 为参数，参数可以是：文本、DOM 元素、组件
+// 组件是返回文本或者 DOM 元素的函数
+
+// DOM 元素
+const DomElement = React.createElement(
+  'div',
+  {
+    className: 'class_test',
+    id: 'test',
+    onClick: () => alert('hello world'),
+    style: {
+      backgroundColor: '#ccc',
+      color: 'red'
+    }
+  },
+  React.createElement('b', null, 'JavaScript'),
+  ' is turning 25!'
+)
+
+ReactDOM.render(DomElement, document.getElementById('root'))
+```
+
+### build-my-own-react/lib
+
+**`creact.js`:**
+
+```js
+import { createReactElement as createElement } from './creactElement.js'
+
+export default {
+  createElement
+}
+```
+
+**`creactElement.js`:**
+
+```js
+// React 元素
+// 是 html 的抽象 js 对象，声明式的
+class ReactElement {
+  constructor(type, props) {
+    this.type = type
+    this.props = props
+  }
+}
+
+// 用户调用时执行生成 React 元素
+function createReactElement(type, props, ...childReactElements) {
+  // 递归生成 React 元素
+  // childReactElements 里是子 createReactElement 函数的返回结果
+  // props 传 null 时，为 {}
+  props = props ?? {}
+  props.children = childReactElements ?? []
+  return new ReactElement(type, props)
+}
+
+export { ReactElement, createReactElement }
+```
+
+**`creactUnit.js`:**
+
+```js
+import { ReactElement } from './creactElement.js'
+import { DomElementUnit } from './DomElementUnit.js'
+import { TextUnit } from './TextUnit.js'
+
+// 工厂模式
+export function createReactUnit(reactElement) {
+  // console.log('render 输入的 react 元素: ', reactElement)
+
+  // 判断 reactElement 的类型
+  // 对应：ReactDOM.render('hello world', document.getElementById('root'))
+  if (typeof reactElement === 'string' || typeof reactElement === 'number') {
+    return new TextUnit(reactElement)
+  }
+
+  // 对应：React.createElement('div', {}, 'hello world')
+  if (reactElement instanceof ReactElement && typeof reactElement.type === 'string') {
+    return new DomElementUnit(reactElement)
+  }
+```
+
+**`DomElementUnit.js`:**
+
+```js
+import { createReactUnit } from './creactUnit.js'
+import { Unit } from './Unit.js'
+
+export class DomElementUnit extends Unit {
+  create(react_id) {
+    this._react_id = react_id
+    const { type, props } = this._currentReactElement
+
+    // 子 dom 字串
+    let allChildDomString = ''
+    let tagStart = `<${type} data-react_id="${react_id}"`
+    const tagEnd = `</${type}>`
+    // 处理属性
+    for (const [key, val] of Object.entries(props)) {
+      if (key === 'className') {
+        // className 的处理
+        tagStart = tagStart + `class="${val}"`
+      } else if (key === 'style') {
+        // style 的处理：驼峰转 '-'
+        const style = Object.entries(val)
+          .map(([k, v]) => {
+            return `${k.replace(/[A-Z]/g, m => `-${m.toLowerCase()}`)}:${v}`
+          })
+          .join(';')
+        tagStart = tagStart + `style="${style}"`
+      } else if (/^on[A-Z]/.test(key)) {
+        // 事件处理
+        const eventName = key.slice(2).toLowerCase()
+        // 事件挂在 document 上，也可挂在别处
+        document.addEventListener(eventName, val)
+        // type.addEventListener(eventName, val)
+      } else if (key === 'children') {
+        val.forEach((el, idx) => {
+          // 调用 create 方法生成对应的 dom 字串
+          // 子元素可以是文本节点或者 DOM 元素
+          // 平级的迭代，子元素递归
+          const childReactUnit = createReactUnit(el)
+          const childReactDomString = childReactUnit.create(`${react_id}_${idx}`)
+          allChildDomString += childReactDomString
+        })
+      } else {
+        // 其它不需要特殊处理的属性
+        tagStart = tagStart + `${key}="${val}"`
+      }
+    }
+    return tagStart + '>' + allChildDomString + tagEnd
+  }
+}
+```
+
+## 渲染组件流程

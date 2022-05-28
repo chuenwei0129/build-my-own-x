@@ -1,11 +1,31 @@
 // js 后缀需要添加否则会 404
 import ReactDOM from '../../packages/build-my-own-react/lib/creact-dom.js'
+import React from '../../packages/build-my-own-react/lib/creact.js'
 
 // jsx 编译为 React.createElement()
 // render 接受 React.createElement() 为参数，React 元素可以是 文本、DOM 元素、组件
 // 组件是返回文本或者 DOM 元素的函数
 
-ReactDOM.render('hello world', document.getElementById('root'))
+// 文本
+// ReactDOM.render('hello world', document.getElementById('root'))
+
+// DOM 元素
+const DomElement = React.createElement(
+  'div',
+  {
+    className: 'class_test',
+    id: 'test',
+    onClick: () => alert('hello world'),
+    style: {
+      backgroundColor: '#ccc',
+      color: 'red'
+    }
+  },
+  React.createElement('b', null, 'JavaScript'),
+  ' is turning 25!'
+)
+
+ReactDOM.render(DomElement, document.getElementById('root'))
 
 // class Counter extends React.Component {
 //   constructor(props) {

@@ -20,5 +20,3 @@ function render(reactElement, container) {
 }
 
 export default { render }
-
-// container.innerHTML = `<span data-reactid="0">${element}</span>`

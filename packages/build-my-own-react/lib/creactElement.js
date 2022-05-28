@@ -1,4 +1,5 @@
-// 辅助类：React 元素类
+// React 元素
+// 是 html 的抽象 js 对象，声明式的
 class ReactElement {
   constructor(type, props) {
     this.type = type
@@ -6,13 +7,13 @@ class ReactElement {
   }
 }
 
-// 生成 React 元素
-function createReactElement(type, props, ...children) {
-  // children 剩余参数放入 children 数组中
-  // children 也是 react 元素的 props 属性
+// 用户调用时执行生成 React 元素
+function createReactElement(type, props, ...childReactElements) {
+  // 递归生成 React 元素
+  // childReactElements 里是子 createReactElement 函数的返回结果
   // props 传 null 时，为 {}
   props = props ?? {}
-  props.children = children ?? []
+  props.children = childReactElements ?? []
   return new ReactElement(type, props)
 }
 
