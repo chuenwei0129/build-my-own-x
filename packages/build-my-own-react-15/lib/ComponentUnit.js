@@ -16,6 +16,14 @@ export class ComponentUnit extends Unit {
     // 把 _instanceComponent 组件和处理实例的 _currentReactUnit 对应
     this._instanceComponent._currentReactUnit = this
 
+    // componentWillMount 钩子
+    this._instanceComponent.componentWillMount && this._instanceComponent.componentWillMount()
+
+    // 在组件实例挂载完毕后触发 componentDidMount 方法
+    document.addEventListener('mounted', () => {
+      this._instanceComponent.componentDidMount && this._instanceComponent.componentDidMount()
+    })
+
     // 调用实例的 render 方法，返回的是 jsx
     const renderReturnReactElement = this._instanceComponent.render()
 

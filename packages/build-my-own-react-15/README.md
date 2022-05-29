@@ -21,3 +21,10 @@
 ### 复合渲染：组件渲染
 
 ![](https://raw.githubusercontent.com/chuenwei0129/my-picgo-repo/master/fe-engineering/SCR-20220530-1lp.png)
+
+**代码 `commit` ：**[4475870677e3c2ab572a178a2a391a4ad9bc81aa](https://github.com/chuenwei0129/build-my-own-x/commit/4475870677e3c2ab572a178a2a391a4ad9bc81aa)
+
+### 渲染环节的生命周期钩子
+
+<!-- ComponentUnit.create => ComponentUnit.create => DomElementUnit.create(处理属性、子元素) => DomElementUnit.create || TextUnit.create => TextUnit.create -->
+**代码 `commit` ：**

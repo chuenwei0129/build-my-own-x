@@ -44,6 +44,14 @@ class Counter extends React.Component {
     alert('hello world')
   }
 
+  componentWillMount() {
+    console.log('componentWillMount')
+  }
+
+  componentDidMount() {
+    console.log('componentDidMount')
+  }
+
   render() {
     const h1 = React.createElement('h1', { style: { color: 'yellow' } }, this.props.name)
 
