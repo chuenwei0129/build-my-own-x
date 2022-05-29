@@ -1,4 +1,4 @@
-import { createReactElement as createElement } from './creactElement.js'
+import { createReactElement as createElement } from '../../build-my-own-react/lib/creactElement.js'
 
 // 用户调用的组件抽象类
 export class Component {

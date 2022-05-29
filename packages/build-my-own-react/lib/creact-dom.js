@@ -5,6 +5,8 @@ const root_react_id = '0'
 // 注册自定义 mounted 事件
 const event = new Event('mounted')
 
+// 渲染流程 jsx => react 单元 => dom string => dom
+
 function render(reactElement, container) {
   // 创建对应的 react 单元（三种）
   const reactUnit = createReactUnit(reactElement)

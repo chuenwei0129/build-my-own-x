@@ -1,27 +1,12 @@
-import { ReactElement } from './creactElement.js'
 import { createReactUnit } from './creactUnit.js'
+import { shouldDeepCompare } from './shouldDeepCompare.js'
 import { Unit } from './Unit.js'
-
-// diff 优化，是否是脏组件，即 type 不同的组件直接替换
-function shouldDeepCompare(oldElement, newElement) {
-  if (oldElement != null || newElement != null) {
-    if (
-      (typeof oldElement === 'string' || typeof oldElement === 'number') &&
-      (typeof newElement === 'string' || typeof newElement === 'number')
-    ) {
-      return true
-    } else if (oldElement instanceof ReactElement && newElement instanceof ReactElement) {
-      return oldElement.type === newElement.type
-    }
-  }
-}
 
 export class ComponentUnit extends Unit {
   create(react_id) {
     this._react_id = react_id
     const { type: Component, props } = this._currentReactElement
-
-    // 实例化用户定义的 React.Component，注入写在其标签上的 props，并把组件实例挂到 unit 实例上
+    // 实例化用户定义的 React.Component，形如：<Counter name="计数器">，注入写在其标签上的 props，并把组件实例挂到 unit 实例上
     this._instanceComponent = new Component(props)
 
     // 把 _instanceComponent 组件和 当前 react 渲染组件单元 _currentUnit 建立联系
@@ -43,9 +28,11 @@ export class ComponentUnit extends Unit {
     return this._renderReturnReactUnit.create(react_id)
   }
 
+  // 调用顺序：componentUnit.update => domUnit.update => textUnit.update
+  // nextReactElement 参数：null => <Counter> 组件返回的 jsx => 子节点中非 React.createElement() 部份，形如：this.state.count
   update(nextReactElement, nextState) {
-    // nextReactElement 是需要更新的 reactElement
-    // 是否复用 reactElement 上的 props 属性
+    // nextReactElement 是对应 setState 所在的组件返回的 jsx
+    // 是否更新 reactElement 上的 props 属性，比如 <Counter name="计数器">，更新 name 属性
     // 旧的
     const prevProps = this._currentReactElement?.props
     // 新的
@@ -53,7 +40,9 @@ export class ComponentUnit extends Unit {
     nextProps = nextProps ?? prevProps
 
     // state 在创建时是用户传入的，更新时是用户调用 setState 方法时传入的
-    // 更新状态
+    // state 是用户定义在 jsx 上的，运行时才能获取到
+
+    // 核心：更新状态
     this._instanceComponent.state = { ...this._instanceComponent.state, ...nextState }
 
     // componentWillUpdate 钩子
@@ -67,27 +56,39 @@ export class ComponentUnit extends Unit {
     //   return
     // }
 
-    // 获取状态改变后的 react 元素
+    // 获取新的 jsx 元素
     this._nextRenderReturnReactElement = this._instanceComponent.render()
 
-    // 新老 react 元素对比
+    // 组件级别的 diff
+    // 新老 jsx 元素对比
     if (
       shouldDeepCompare(
-        // 缓存的老的状态
+        // 缓存的老的 jsx
         this._renderReturnReactUnit._currentReactElement,
-        // 新的状态
+        // 更新状态的新的 jsx
         this._nextRenderReturnReactElement
       )
     ) {
-      // type 相同，对应节点单元传入新的状态
+      // 组件 type 相同，对应节点单元传入新的状态
+      // 一个组件更新，其子组件，dom 元素，文本节点都会更新
       // 递归执行最终递归到文本单元
+      // 相同复用，逻辑转到下一级
       this._renderReturnReactUnit.update(this._nextRenderReturnReactElement)
     } else {
-      // type 不同，直接创建新的节点并插入dom
-      document.querySelector(`[data-reactid="${this._reactid}"]`).innerHTML = createReactUnit(
-        this._nextReactElement
-      ).create(this._reactid)
+      // type 不同，整个 type 替换
+      // 代码执 create 是调用的 domUnit.create，上面并没有 this._renderReturnReactUnit 逻辑
+      // 所以 this._renderReturnReactUnit._currentReactElement 并没有更新
+      // 所以出 bug
+      document.querySelector(`[data-react_id="${this._react_id}"]`).outerHTML = createReactUnit(
+        this._nextRenderReturnReactElement
+      ).create(this._react_id)
+
+      // 解决：手动更新 jsx 元素
+      // _renderReturnReactUnit 从名字就可以看出只有 component 才有
+      this._renderReturnReactUnit._currentReactElement = this._nextRenderReturnReactElement
     }
+
+    // componentDidUpdate 钩子
     this._instanceComponent.componentDidUpdate && this._instanceComponent.componentDidUpdate()
   }
 }
