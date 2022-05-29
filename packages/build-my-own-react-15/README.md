@@ -8,12 +8,4 @@
 
 ### 渲染文本节点
 
-### 渲染 DOM 节点
-
-### 复合渲染：渲染组件
-
-## 状态更新
-
-### 文本节点更新
-
-### DOM 属性更新
+![](https://raw.githubusercontent.com/chuenwei0129/my-picgo-repo/master/fe-engineering/SCR-20220529-x3o.png)
