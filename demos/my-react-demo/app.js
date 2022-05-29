@@ -83,6 +83,25 @@ import React from '../../packages/build-my-own-react-15/lib/creact.js'
  */
 
 // 文本节点
+// class Counter extends React.Component {
+//   constructor(props) {
+//     super(props)
+
+//     this.state = { count: 1 }
+//   }
+
+//   componentDidMount() {
+//     setInterval(() => {
+//       this.setState({ count: this.state.count + 1 })
+//     }, 1000)
+//   }
+
+//   render() {
+//     return this.state.count
+//   }
+// }
+
+// dom 元素属性及文本更新
 class Counter extends React.Component {
   constructor(props) {
     super(props)
@@ -90,15 +109,29 @@ class Counter extends React.Component {
     this.state = { count: 1 }
   }
 
-  componentDidMount() {
-    setInterval(() => {
-      this.setState({ count: this.state.count + 1 })
-    }, 1000)
+  handleClick = () => {
+    this.setState({ count: this.state.count + 1 })
   }
 
   render() {
-    return this.state.count
+    const h1 = React.createElement('h1', { style: { color: 'yellow' } }, this.props.name)
+
+    const counter = React.createElement(
+      'p',
+      { style: { color: (this.state.count & 1) === 0 ? 'red' : 'blue' } },
+      this.state.count
+    )
+    const btn = React.createElement('button', { onClick: this.handleClick }, ' + ')
+
+    // 根 div 元素的 react_id 为 '0'
+    return React.createElement(
+      'div',
+      { style: { backgroundColor: (this.state.count & 1) === 0 ? 'green' : 'grey' } },
+      h1,
+      counter,
+      btn
+    )
   }
 }
 
-ReactDOM.render(React.createElement(Counter), document.getElementById('root'))
+ReactDOM.render(React.createElement(Counter, { name: '计数器' }), document.getElementById('root'))

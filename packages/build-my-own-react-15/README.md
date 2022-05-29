@@ -33,3 +33,6 @@
 
 ### 文本节点
 
+<https://github.com/chuenwei0129/build-my-own-x/commit/0f18990b715471fdfd9d14353dbac6a9d98935d3>
+
+### DOM 元素元素属性及文本
