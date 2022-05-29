@@ -6,28 +6,65 @@ import React from '../../packages/build-my-own-react-15/lib/creact.js'
 // createElement 返回值为 reactElement
 // render 接受 reactElement 为参数，React 元素可以是文本节点、原生 DOM 元素（包含属性，文本，子元素）、组件（返回值为 原生 DOM 元素或文本节点）
 
-// DOM 元素
-const DomElement = React.createElement(
-  'div',
-  {
-    className: 'box',
-    id: 'box',
-    onClick: () => alert('hello world'),
-    style: {
-      backgroundColor: '#ccc',
-      color: 'yellow'
-    }
-  },
-  React.createElement(
-    'b',
-    {
-      style: {
-        color: 'blue'
-      }
-    },
-    'JavaScript'
-  ),
-  ' is turning 25!'
-)
+// 文本节点
+// const text = 'hello world'
 
-ReactDOM.render(DomElement, document.getElementById('root'))
+// DOM 元素
+// const DomElement = React.createElement(
+//   'div',
+//   {
+//     className: 'box',
+//     id: 'box',
+//     onClick: () => alert('hello world'),
+//     style: {
+//       backgroundColor: '#ccc',
+//       color: 'yellow'
+//     }
+//   },
+//   React.createElement(
+//     'b',
+//     {
+//       style: {
+//         color: 'blue'
+//       }
+//     },
+//     'JavaScript'
+//   ),
+//   ' is turning 25!'
+// )
+
+// 组件
+class Counter extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = { count: 1 }
+  }
+
+  handleClick = () => {
+    alert('hello world')
+  }
+
+  render() {
+    const h1 = React.createElement('h1', { style: { color: 'yellow' } }, this.props.name)
+
+    const counter = React.createElement('div', { style: { color: 'red' } }, this.state.count)
+    const btn = React.createElement('button', { onClick: this.handleClick }, ' + ')
+
+    // 根 div 元素的 react_id 为 '0'
+    return React.createElement('div', { style: { backgroundColor: 'grey' } }, h1, counter, btn)
+  }
+}
+
+class CounterBox extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = { name: '计数器' }
+  }
+
+  render() {
+    return React.createElement(Counter, { name: this.state.name })
+  }
+}
+
+/* {type: Counter类, props: {name: '计数器'}} */
+ReactDOM.render(React.createElement(CounterBox), document.getElementById('root'))

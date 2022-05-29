@@ -16,4 +16,8 @@
 
 ![](https://raw.githubusercontent.com/chuenwei0129/my-picgo-repo/master/fe-engineering/SCR-20220530-q0.png)
 
-**代码 `commit` ：**
+**代码 `commit` ：**[9c8857145d16c491d9f50c23ee07aa7058c5856e](https://github.com/chuenwei0129/build-my-own-x/commit/9c8857145d16c491d9f50c23ee07aa7058c5856e)
+
+### 复合渲染：组件渲染
+
+![](https://raw.githubusercontent.com/chuenwei0129/my-picgo-repo/master/fe-engineering/SCR-20220530-1lp.png)
