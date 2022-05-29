@@ -27,8 +27,30 @@ export class ComponentUnit extends Unit {
     // 调用实例的 render 方法，返回的是 jsx
     const renderReturnReactElement = this._instanceComponent.render()
 
+    // 缓存 renderReturnReactElement 对应的 Unit
     // 递归处理 jsx
     this._renderReturnReactUnit = createReactUnit(renderReturnReactElement)
     return this._renderReturnReactUnit.create(react_id)
+  }
+
+  // 触发更新的源头组件传入的第一个参数为 null
+  // 由于是递归更新组件套组件，所以需要把 nextReactElement 传递给子组件
+  // 先不考虑组件套组件的情况
+  update(nextReactElement, nextState) {
+    // 核心：更新状态
+    this._instanceComponent.state = { ...this._instanceComponent.state, ...nextState }
+
+    // componentWillUpdate 钩子
+    this._instanceComponent.componentWillUpdate && this._instanceComponent.componentWillUpdate()
+
+    // 获取新的 jsx 元素
+    this._nextRenderReturnReactElement = this._instanceComponent.render()
+
+    // 递归处理新的 jsx
+    // 仅有文本节点的情况下对应的 Unit 是 TextUnit
+    this._renderReturnReactUnit.update(this._nextRenderReturnReactElement)
+
+    // componentDidUpdate 钩子
+    this._instanceComponent.componentDidUpdate && this._instanceComponent.componentDidUpdate()
   }
 }

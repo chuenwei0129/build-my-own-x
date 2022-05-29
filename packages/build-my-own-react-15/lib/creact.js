@@ -5,6 +5,10 @@ export class Component {
   constructor(props) {
     this.props = props
   }
+
+  setState(nextState) {
+    this._currentReactUnit.update(null, nextState)
+  }
 }
 
 export default {

@@ -7,4 +7,9 @@ export class TextUnit extends Unit {
     this._react_id = react_id
     return `<span data-react_id=${react_id}>${this._currentReactElement}</span>`
   }
+
+  update(nextReactElement) {
+    // 直接 dom 替换文本节点
+    document.querySelector(`[data-react_id="${this._react_id}"]`).textContent = nextReactElement
+  }
 }

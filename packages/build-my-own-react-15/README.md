@@ -27,4 +27,9 @@
 ### 渲染环节的生命周期钩子
 
 <!-- ComponentUnit.create => ComponentUnit.create => DomElementUnit.create(处理属性、子元素) => DomElementUnit.create || TextUnit.create => TextUnit.create -->
-**代码 `commit` ：**
+**代码 `commit` ：**[0661543956504e89d24c0c5903028880caa9511b](https://github.com/chuenwei0129/build-my-own-x/commit/0661543956504e89d24c0c5903028880caa9511b)
+
+## 更新
+
+### 文本节点
+
