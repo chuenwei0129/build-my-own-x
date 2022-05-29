@@ -102,36 +102,73 @@ import React from '../../packages/build-my-own-react-15/lib/creact.js'
 // }
 
 // dom 元素属性及文本更新
+// class Counter extends React.Component {
+//   constructor(props) {
+//     super(props)
+
+//     this.state = { count: 1 }
+//   }
+
+//   handleClick = () => {
+//     this.setState({ count: this.state.count + 1 })
+//   }
+
+//   render() {
+//     const h1 = React.createElement('h1', { style: { color: 'yellow' } }, this.props.name)
+
+//     const counter = React.createElement(
+//       'p',
+//       { style: { color: (this.state.count & 1) === 0 ? 'red' : 'blue' } },
+//       this.state.count
+//     )
+
+//     const btn = React.createElement('button', { onClick: this.handleClick }, ' + ')
+
+//     // 根 div 元素的 react_id 为 '0'
+//     return React.createElement(
+//       'div',
+//       { style: { backgroundColor: (this.state.count & 1) === 0 ? 'green' : 'grey' } },
+//       h1,
+//       counter,
+//       btn
+//     )
+//   }
+// }
+
 class Counter extends React.Component {
   constructor(props) {
     super(props)
 
-    this.state = { count: 1 }
+    this.state = { flag: true }
   }
 
-  handleClick = () => {
-    this.setState({ count: this.state.count + 1 })
+  componentDidMount() {
+    setInterval(() => {
+      this.setState({ flag: !this.state.flag })
+    }, 1000)
   }
 
   render() {
-    const h1 = React.createElement('h1', { style: { color: 'yellow' } }, this.props.name)
-
-    const counter = React.createElement(
-      'p',
-      { style: { color: (this.state.count & 1) === 0 ? 'red' : 'blue' } },
-      this.state.count
+    const list1 = React.createElement(
+      'ul',
+      null,
+      React.createElement('li', { key: 'A' }, 'A'),
+      React.createElement('li', { key: 'B' }, 'B'),
+      React.createElement('li', { key: 'C' }, 'C'),
+      React.createElement('li', { key: 'D' }, 'D')
     )
-    const btn = React.createElement('button', { onClick: this.handleClick }, ' + ')
-
-    // 根 div 元素的 react_id 为 '0'
-    return React.createElement(
+    const list2 = React.createElement(
       'div',
-      { style: { backgroundColor: (this.state.count & 1) === 0 ? 'green' : 'grey' } },
-      h1,
-      counter,
-      btn
+      null,
+      // React.createElement('span', { key: 'A' }, 'A1'),
+      React.createElement('li', { key: 'A' }, 'A1'),
+      React.createElement('li', { key: 'C' }, 'C1'),
+      React.createElement('li', { key: 'B' }, 'B1'),
+      React.createElement('li', { key: 'E' }, 'E1'),
+      React.createElement('li', { key: 'F' }, 'F1')
     )
+    return this.state.flag ? list1 : list2
   }
 }
 
-ReactDOM.render(React.createElement(Counter, { name: '计数器' }), document.getElementById('root'))
+ReactDOM.render(React.createElement(Counter), document.getElementById('root'))

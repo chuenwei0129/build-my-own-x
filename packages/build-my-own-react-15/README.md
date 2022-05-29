@@ -36,3 +36,11 @@
 <https://github.com/chuenwei0129/build-my-own-x/commit/0f18990b715471fdfd9d14353dbac6a9d98935d3>
 
 ### DOM 元素元素属性及文本
+
+<https://github.com/chuenwei0129/build-my-own-x/commit/18eb4055e322fa0c27d1c6708373d6ed71b078d1>
+
+### dom diff
+
+#### 组件 diff
+
+#### 同级 dom tag diff

@@ -1,4 +1,5 @@
 import { createReactUnit } from './creactUnit.js'
+import { shouldDeepCompare } from './shouldDeepCompare.js'
 import { Unit } from './Unit.js'
 
 export class ComponentUnit extends Unit {
@@ -46,8 +47,35 @@ export class ComponentUnit extends Unit {
     // 获取新的 jsx 元素
     this._nextRenderReturnReactElement = this._instanceComponent.render()
 
-    // 递归处理新的 jsx
+    // 组件 diff 逻辑
+    if (
+      shouldDeepCompare(
+        // 老的 jsx
+        this._renderReturnReactUnit._currentReactElement,
+        // 新的 jsx
+        this._nextRenderReturnReactElement
+      )
+    ) {
+      // 返回的 jsx 是文本的情况下 _renderReturnReactUnit 是 TextUnit
+      // 返回的 jsx 是 dom 的情况下 _renderReturnReactUnit 是 DomElementUnit
+      // 返回的 jsx 是 组件 的情况下 _renderReturnReactUnit 是 ComponentUnit
+      // 递归处理新的 jsx
+      // this._renderReturnReactUnit.update(this._nextRenderReturnReactElement)
+    } else {
+      // type 不同，整个 type 替换
+      // 代码执 create 是调用的 domUnit.create，上面并没有 this._renderReturnReactUnit 逻辑
+      // 所以 this._renderReturnReactUnit._currentReactElement 并没有更新
+      // 所以出 bug，需要手动更新 this._renderReturnReactUnit._currentReactElement
+      document.querySelector(`[data-react_id="${this._react_id}"]`).outerHTML = createReactUnit(
+        this._nextRenderReturnReactElement
+      ).create(this._react_id)
+
+      // _renderReturnReactUnit 只有 componentUnit 才有
+      this._renderReturnReactUnit._currentReactElement = this._nextRenderReturnReactElement
+    }
+
     // 仅有文本节点的情况下对应的 Unit 是 TextUnit
+    // 递归处理新的 jsx
     this._renderReturnReactUnit.update(this._nextRenderReturnReactElement)
 
     // componentDidUpdate 钩子
