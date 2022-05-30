@@ -1,0 +1,26 @@
+{
+  "name": "build-my-own-generator",
+  "version": "0.0.0",
+  "description": "> TODO: description",
+  "author": "chuenwei0129 <chuenwei0129@gmail.com>",
+  "homepage": "https://github.com/chuenwei0129/c-pack#readme",
+  "license": "ISC",
+  "main": "lib/build-my-own-generator.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chuenwei0129/c-pack.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/chuenwei0129/c-pack/issues"
+  }
+}

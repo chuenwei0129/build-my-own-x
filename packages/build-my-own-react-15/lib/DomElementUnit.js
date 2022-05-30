@@ -163,7 +163,6 @@ export class DomElementUnit extends Unit {
       // 是否复用由 key type 共同决定
       // 通过新 key 找不打对应的旧单元，表明没有可复用单元，prevChildReactElement undefined，进入 else 逻辑
       // diff type
-
       if (shouldDeepCompare(prevChildReactElement, nextChildReactElement)) {
         // type 相同，复用旧 react 单元，因为确定了复用，所以要更新
         // 即使内容没变也会进入更新逻辑。比如 G 节点，可以优化（这就是 react 把优化交给了用户）

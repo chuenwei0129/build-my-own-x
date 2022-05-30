@@ -143,7 +143,7 @@ class Counter extends React.Component {
   }
 
   componentDidMount() {
-    setInterval(() => {
+    setTimeout(() => {
       this.setState({ flag: !this.state.flag })
     }, 2000)
   }
@@ -155,19 +155,19 @@ class Counter extends React.Component {
       React.createElement('li', { key: 'A', style: { color: 'yellow' } }, 'A'),
       React.createElement('li', { key: 'B' }, 'B'),
       React.createElement('li', { key: 'C' }, 'C'),
-      React.createElement('li', { key: 'D' }, 'D'),
-      React.createElement('li', { key: 'G' }, 'G')
+      React.createElement('li', { key: 'D' }, 'D')
     )
+
     const list2 = React.createElement(
       'ul',
       null,
       React.createElement('span', { key: 'A', style: { color: 'blue' } }, 'A1'),
       React.createElement('li', { key: 'C' }, 'C1'),
-      React.createElement('li', { key: 'B' }, 'B1'),
+      React.createElement('li', { key: 'B' }, 'B'),
       React.createElement('li', { key: 'E' }, 'E1'),
-      React.createElement('li', { key: 'F' }, 'F1'),
-      React.createElement('li', { key: 'G' }, 'G')
+      React.createElement('li', { key: 'F' }, 'F1')
     )
+
     return this.state.flag ? list1 : list2
   }
 }
