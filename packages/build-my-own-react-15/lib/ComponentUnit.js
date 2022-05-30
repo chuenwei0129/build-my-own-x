@@ -60,7 +60,7 @@ export class ComponentUnit extends Unit {
       // 返回的 jsx 是 dom 的情况下 _renderReturnReactUnit 是 DomElementUnit
       // 返回的 jsx 是 组件 的情况下 _renderReturnReactUnit 是 ComponentUnit
       // 递归处理新的 jsx
-      // this._renderReturnReactUnit.update(this._nextRenderReturnReactElement)
+      this._renderReturnReactUnit.update(this._nextRenderReturnReactElement)
     } else {
       // type 不同，整个 type 替换
       // 代码执 create 是调用的 domUnit.create，上面并没有 this._renderReturnReactUnit 逻辑

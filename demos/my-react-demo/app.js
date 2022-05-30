@@ -143,29 +143,33 @@ class Counter extends React.Component {
   }
 
   componentDidMount() {
-    setInterval(() => {
+    setTimeout(() => {
       this.setState({ flag: !this.state.flag })
-    }, 1000)
+    }, 2000)
+
+    setTimeout(() => {
+      this.setState({ flag: !this.state.flag })
+    }, 4000)
   }
 
   render() {
     const list1 = React.createElement(
-      'ul',
+      'div',
       null,
-      React.createElement('li', { key: 'A' }, 'A'),
+      React.createElement('li', { key: 'A', style: { color: 'red' } }, 'A'),
       React.createElement('li', { key: 'B' }, 'B'),
-      React.createElement('li', { key: 'C' }, 'C'),
-      React.createElement('li', { key: 'D' }, 'D')
+      React.createElement('li', { key: 'C' }, 'C')
+      // React.createElement('li', { key: 'D' }, 'D')
     )
     const list2 = React.createElement(
       'div',
       null,
       // React.createElement('span', { key: 'A' }, 'A1'),
-      React.createElement('li', { key: 'A' }, 'A1'),
+      React.createElement('li', { key: 'A', style: { color: 'blue' } }, 'A1'),
       React.createElement('li', { key: 'C' }, 'C1'),
-      React.createElement('li', { key: 'B' }, 'B1'),
-      React.createElement('li', { key: 'E' }, 'E1'),
-      React.createElement('li', { key: 'F' }, 'F1')
+      React.createElement('li', { key: 'B' }, 'B1')
+      // React.createElement('li', { key: 'E' }, 'E1'),
+      // React.createElement('li', { key: 'F' }, 'F1')
     )
     return this.state.flag ? list1 : list2
   }

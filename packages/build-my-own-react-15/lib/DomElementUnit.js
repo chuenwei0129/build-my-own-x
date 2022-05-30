@@ -1,4 +1,5 @@
 import { createReactUnit } from './creactUnit.js'
+import { shouldDeepCompare } from './shouldDeepCompare.js'
 import { Unit } from './Unit.js'
 
 export class DomElementUnit extends Unit {
@@ -97,12 +98,79 @@ export class DomElementUnit extends Unit {
 
   // 更新 children
   updateChildren(nextChildReactElements) {
-    this._childReactUnits.forEach((childReactUnit, idx) => {
-      childReactUnit.update(nextChildReactElements[idx])
-    })
+    this.diffChildren(nextChildReactElements)
   }
 
-  // 更新
+  // 因为 reactUnit 上有旧 jsx，create，update 方法，所以用来辅助 diff 操作
+  mapPrevChildReactUnits(childReactUnits) {
+    const map = {}
+    childReactUnits.forEach((unit, idx) => {
+      // key 和 react 单元实例一一对应
+      map[unit._currentReactElement.props?.key ?? `${idx}`] = unit
+    })
+    // map = {key1: reactUnit1, key2: reactUnit2...}
+    return map
+  }
+
+  // 这一步已经更新了复用节点自身的 dom，并且返回 nextChildReactUnits 设计图
+  // 设计图指明复用节点新增节点将来位于页面的位置
+  updateReuseSelfAndGetNextChildReactUnits(prevChildReactUnitsMap, nextChildReactElements) {
+    const nextChildReactUnits = []
+    const nextChildReactUnitsMap = {}
+
+    // 把数组序列 id 当作的 key，reactUnit 与 key 的绑定会变化，不是一一对应，无法使用 map 查找复用
+    nextChildReactElements.forEach((nextChildReactElement, idx) => {
+      // 遍历的第一个 jsx 的 key
+      const nextKey = nextChildReactElement.props?.key ?? `${idx}`
+      // 通过 nextChildReactElements key 拿到 key 对应的 prevChildReactUnit
+      const prevChildReactUnit = prevChildReactUnitsMap[nextKey]
+      const prevChildReactElement = prevChildReactUnit?._currentReactElement
+      // 是否复用由 key type 共同决定
+      // 通过新 key 找不打对应的旧单元，表明没有可复用单元，prevChildReactElement undefined，进入 else 逻辑
+      // diff type
+      if (shouldDeepCompare(prevChildReactElement, nextChildReactElement)) {
+        // type 相同，复用旧 react 单元
+        // 这里会调用 type 对应级别的 Unit.update 更新文本和属性，然后递归更新子元素的文本和属性
+        // 由于迭代的是数组，所以所有单元都更新了。这一步已经完成了更新操作，接下来还需要移动，删除，插入等操作
+        prevChildReactUnit.update(nextChildReactElement)
+        // nextChildReactUnits 就是为接下来的操作准备的
+        // 把复用的单元放入新 react 单元数组
+        nextChildReactUnits.push(prevChildReactUnit)
+        nextChildReactUnitsMap[nextKey] = prevChildReactUnit
+      } else {
+        // type 不同，无法复用，创建新的 react 单元
+        const nextChildReactUnit = createReactUnit(nextChildReactElement)
+        //  nextChildReactUnit 单元
+        nextChildReactUnits.push(nextChildReactUnit)
+        nextChildReactUnitsMap[nextKey] = nextChildReactUnit
+        // 没有调用 nextChildReactUnit.create 无法更新 this._childReactUnits
+        // 需要主动更新缓存的 this._childReactUnits
+        // 看见新增删除都要本能注意缓存问题
+        this._childReactUnits[idx] = nextChildReactUnit
+      }
+    })
+
+    // 新旧 react 单元混合的需要更新的单元，可复用与新建的单元混合
+    return { nextChildReactUnits, nextChildReactUnitsMap }
+  }
+
+  diffChildren(nextChildReactElements) {
+    // 将旧 reactUnits 转换成 map
+    // map 用 key 来辅助查找是否复用节点
+    // 可复用就代表 reactUnit 可以复用，不可复用就代表 reactUnit 需要重新创建
+    const prevChildReactUnitsMap = this.mapPrevChildReactUnits(this._childReactUnits)
+
+    // 新的 jsx children 和 老的 reactUnits children 对比，diff 出新的 reactUnits children
+    // nextChildReactUnits 包含复用的节点与新增的节点
+    // nextChildReactUnits 可以理解为设计图，diff 就是得到设计图，patch 就是把旧 dom 按照设计图的样子更新，就是旧到新的操作过程
+    // 设计图 === [a(复用),c(复用),b(复用),e,f] 和 旧 [a,b,c,d（删）] diff 就可以得到 patch 操作
+    const { nextChildReactUnits, nextChildReactUnitsMap } =
+      this.updateReuseSelfAndGetNextChildReactUnits(prevChildReactUnitsMap, nextChildReactElements)
+
+    // 根据设计图 diff 出 patch 操作
+  }
+
+  // 代码进入这里意味着根节点 tag 可复用，可以 dom 上更新 props 和 diff 同级 children
   update(nextReactElement) {
     // create 处理得是 this._currentReactElement 对应的 jsx
     // update 处理得是 nextReactElement 对应的 jsx
@@ -110,7 +178,7 @@ export class DomElementUnit extends Unit {
     // 更新 dom 属性，就是处理 props，比如 className, style, onClick 等
     this.updateProps(this._currentReactElement.props, nextReactElement.props)
     // 处理完 props，再处理 children
-    // 假设 children 节点都可以复用
+    // 同级 diff
     this.updateChildren(nextReactElement.props.children)
   }
 
