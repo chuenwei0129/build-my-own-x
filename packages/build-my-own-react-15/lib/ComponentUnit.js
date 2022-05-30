@@ -74,10 +74,6 @@ export class ComponentUnit extends Unit {
       this._renderReturnReactUnit._currentReactElement = this._nextRenderReturnReactElement
     }
 
-    // 仅有文本节点的情况下对应的 Unit 是 TextUnit
-    // 递归处理新的 jsx
-    this._renderReturnReactUnit.update(this._nextRenderReturnReactElement)
-
     // componentDidUpdate 钩子
     this._instanceComponent.componentDidUpdate && this._instanceComponent.componentDidUpdate()
   }
