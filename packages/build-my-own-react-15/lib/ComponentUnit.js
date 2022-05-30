@@ -38,11 +38,24 @@ export class ComponentUnit extends Unit {
   // 由于是递归更新组件套组件，所以需要把 nextReactElement 传递给子组件
   // 先不考虑组件套组件的情况
   update(nextReactElement, nextState) {
+    // 组件套组件时会把 nextReactElement 传递给子组件
+    const prevProps = this._currentReactElement?.props
+    let nextProps = nextReactElement?.props
+    nextProps = nextProps ?? prevProps
+
     // 核心：更新状态
     this._instanceComponent.state = { ...this._instanceComponent.state, ...nextState }
 
     // componentWillUpdate 钩子
     this._instanceComponent.componentWillUpdate && this._instanceComponent.componentWillUpdate()
+
+    // shouldComponentUpdate 钩子
+    if (
+      this._instanceComponent.shouldComponentUpdate &&
+      !this._instanceComponent.shouldComponentUpdate(nextProps, nextState)
+    ) {
+      return
+    }
 
     // 获取新的 jsx 元素
     this._nextRenderReturnReactElement = this._instanceComponent.render()
