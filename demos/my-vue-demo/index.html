@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mini Vue</title>
+    <!-- 引入 vue -->
+    <script src="../../packages/build-my-own-vue/lib/vue.js"></script>
+  </head>
+
+  <body>
+    <div id="app">
+      <h1>{{title}}</h1>
+      <label for="student-name"> 姓名：<input id="student-name" v-model="student.name" /> </label>
+      <label for="student-age"> 年龄：<input id="student-name" v-model="student.age" /> </label>
+      <!-- 需要处理 trim -->
+      <p>我是一名学生，我的名字叫：{{student.name}}，我今年 {{student.age}} 了。</p>
+      <p>{{msg}}</p>
+      <ul>
+        <li>10</li>
+        <li>20</li>
+        <li>30</li>
+      </ul>
+      <button v-on:click="reverseTitle">翻转标题</button>
+    </div>
+
+    <script>
+      const app = new Vue({
+        el: '#app',
+        data: {
+          student: {
+            name: '小明',
+            age: 18
+          },
+          title: 'hello Vue!'
+        },
+        computed: {
+          msg() {
+            return `祝${this.student.name}同学 ${this.student.age} 岁，生日快乐！`
+          }
+        },
+        methods: {
+          reverseTitle: function () {
+            alert('hello word')
+            // TODO:
+            // this.title = this.title.split('').reverse().join('')
+          }
+        }
+      })
+    </script>
+  </body>
+</html>
