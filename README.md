@@ -1,5 +1,9 @@
 # build-my-own-x
 
+## vue: build-my-own-vue
+
+> [刨根问底：搞懂 vue 1.0 的响应式原理](packages/build-my-own-vue/README.md)
+
 ## react: build-my-own-react
 
 > [温故知新：手写迷你 react 15](packages/build-my-own-react-15/README.md)

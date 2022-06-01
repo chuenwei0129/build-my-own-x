@@ -8,13 +8,33 @@ const complierUtils = {
   },
 
   model(node, expr, vm) {
-    // TODO: 双向绑定
+    // 双向绑定
+    const operator = this.updater.modelUpdater
+    // update
+    new Watcher(vm, expr, newVal => {
+      operator(node, newVal)
+    })
+
+    // 双向绑定的实现
+    node.addEventListener('input', e => {
+      // 把 e.target.value 的值赋给 $data.xx.xx, 也就是 expr
+      expr.split('.').reduce((data, cur, idx, arr) => {
+        if (idx === arr.length - 1) {
+          data[cur] = e.target.value
+        }
+        return data[cur]
+      }, vm.$data)
+    })
+
+    const value = this.getValue(vm, expr)
+    // create
+    operator(node, value)
   },
 
   updater: {
-    // modelUpdater(node, value) {
-    //   node.value = value
-    // },
+    modelUpdater(node, value) {
+      node.value = value
+    },
 
     textUpdater(node, value) {
       node.textContent = value
@@ -26,8 +46,19 @@ const complierUtils = {
     const operator = this.updater.textUpdater
     // 把数据插入节点中，替换 {{}}
     const value = expr.replace(/\{\{(.+?)\}\}/g, (...args) => {
+      // 对应 update
+      // new Watcher create 时执行一次，这里类似 setTimeOut update 时直接执行 () => operator => textUpdater
+      new Watcher(vm, args[1], () => {
+        operator(
+          node,
+          expr.replace(/\{\{(.+?)\}\}/g, (...args) => {
+            return this.getValue(vm, args[1])
+          })
+        )
+      })
       return this.getValue(vm, args[1])
     })
+    // 对应 create
     operator(node, value)
   },
 
@@ -47,6 +78,9 @@ class Vue {
     this.$data = options.data
     this.computed = options.computed
     this.methods = options.methods
+
+    // 数据响应式
+    new Observer(this.$data)
 
     // 把计算属性 msg 放到 data 上
     // vm.$data.msg 等同于 vm.computed.msg()
@@ -155,5 +189,77 @@ class Complier {
   // 指令判断
   isDirective(attrName) {
     return attrName.startsWith('v-')
+  }
+}
+
+class Observer {
+  constructor(data) {
+    this.observer(data)
+  }
+
+  observer(data) {
+    if (data && typeof data === 'object') {
+      for (const key in data) {
+        this.defineReactive(data, key, data[key])
+      }
+    }
+  }
+
+  defineReactive(obj, key, val) {
+    if (typeof val === 'object' && val !== null) this.observer(val)
+    const dep = new Dep()
+    Object.defineProperty(obj, key, {
+      get() {
+        Dep.target && dep.on(Dep.target)
+        return val
+      },
+      set: newVal => {
+        if (newVal !== val) {
+          this.observer(newVal)
+          val = newVal
+          dep.emit()
+        }
+      }
+    })
+  }
+}
+
+// 事件调度中心
+class Dep {
+  constructor() {
+    this.events = []
+  }
+  // 订阅 watcher
+  on(watcher) {
+    this.events.push(watcher)
+  }
+  // 触发事件
+  emit() {
+    this.events.forEach(watcher => watcher.update())
+  }
+}
+
+class Watcher {
+  // 数据监听器
+  constructor(vm, expr, cb) {
+    this.vm = vm
+    this.expr = expr
+    this.cb = cb
+
+    // 只能缓存初始值
+    this.initVal = this.getInitVal()
+  }
+
+  getInitVal() {
+    Dep.target = this
+    const val = complierUtils.getValue(this.vm, this.expr)
+    Dep.target = null
+    return val
+  }
+
+  // 优化更新
+  update() {
+    const newVal = complierUtils.getValue(this.vm, this.expr)
+    this.cb(newVal)
   }
 }
