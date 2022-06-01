@@ -10,7 +10,7 @@
 
   <body>
     <div id="app">
-      <h1>{{title}}</h1>
+      <h1>{{title}}: {{count}}</h1>
       <label for="student-name"> 姓名：<input id="student-name" v-model="student.name" /> </label>
       <label for="student-age"> 年龄：<input id="student-name" v-model="student.age" /> </label>
       <!-- 需要处理 trim -->
@@ -22,6 +22,7 @@
         <li>30</li>
       </ul>
       <button v-on:click="reverseTitle">翻转标题</button>
+      <button v-on:click="add">+</button>
     </div>
 
     <script>
@@ -32,7 +33,8 @@
             name: '小明',
             age: 18
           },
-          title: 'hello Vue!'
+          count: 0,
+          title: '计数器'
         },
         computed: {
           msg() {
@@ -41,9 +43,10 @@
         },
         methods: {
           reverseTitle: function () {
-            alert('hello word')
-            // TODO:
-            // this.title = this.title.split('').reverse().join('')
+            this.title = this.title.split('').reverse().join('')
+          },
+          add: function () {
+            this.count++
           }
         }
       })
