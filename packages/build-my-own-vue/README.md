@@ -2,6 +2,8 @@
 
 ## Usage
 
+**在 `my-vue-demo` 目录中：** 使用 [live-server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) 启动 `index.html` 测试。
+
 ## 测试组件
 
 ```html
@@ -59,7 +61,7 @@
 </html>
 ```
 
-## Mini Vue 首次渲染
+## 首次渲染
 
 ```JavaScript
 const complierUtils = {
@@ -382,7 +384,7 @@ reactiveData.arr[4] = 2
 
 > [说完观察者和发布订阅模式的区别，面试官不留我吃饭了](https://juejin.cn/post/6904289794189164558)
 
-## 前置知识：响应式原理
+## 响应式原理
 
 ```html
 <!DOCTYPE html>
@@ -442,10 +444,4 @@ reactiveData.arr[4] = 2
     </script>
   </body>
 </html>
-```
-
-## 给 Mini Vue 添加响应式
-
-```js
-
 ```

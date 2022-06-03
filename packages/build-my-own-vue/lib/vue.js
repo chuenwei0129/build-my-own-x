@@ -257,7 +257,6 @@ class Watcher {
     return val
   }
 
-  // 优化更新
   update() {
     const newVal = complierUtils.getValue(this.vm, this.expr)
     this.cb(newVal)
