@@ -12,6 +12,23 @@
 //  如果 Promise 的 resolve, reject 没有执行会怎么样？
 //  在 Promise 的外部执行 resolve, reject 可以改变 Promise 的状态吗？
 
+// 执行步骤
+// addTask 1 2 3 4 是同步的
+// addTask 1
+// this.count = 0 < 2
+// this.count = 1
+// await task1
+// addTask 2
+// this.count = 1 < 2
+// this.count = 2
+// await task2
+// addTask 3
+// this.count = 2 >= 2
+// this.taskQueue.push(task3)
+// addTask 4
+// this.count = 3 >= 2
+// this.taskQueue.push(task4)
+
 class Scheduler {
   constructor(maxNum) {
     this.taskList = []
@@ -22,6 +39,12 @@ class Scheduler {
   async add(promiseCreator) {
     // 如果当前并发超过最大并发，那就进入任务队列等待
     if (this.count >= this.maxNum) {
+      // add 是同步的，一下子会把所有的任务都放入函数中，所以这里需要把不需要执行的任务放入队列中
+      // 代码可以理解为给 task 3 和 task 4 每个任务都加了把锁，不让执行下去，停在那
+      // 更多任务更多的锁，锁的调度也是串行的
+      // 当 task 1 或 task 2 执行完毕 task 2，就会解除第一把锁，让 task 3 执行
+      // 当 task 1 或 task 3 执行完毕 task 3，就会解除第二把锁，让 task 4 执行
+      // 一共 8000 ms
       await new Promise(resolve => {
         this.taskList.push(resolve) // 锁
       })
@@ -37,7 +60,7 @@ class Scheduler {
     // 次数 - 1
     this.count--
 
-    if (this.taskList.length) {
+    if (this.taskList.length > 0) {
       this.taskList.shift()() // 解锁
     }
 
@@ -59,11 +82,15 @@ const addTask = (time, order) => {
   return scheduler.add(() => timeout(time)).then(() => console.log(order))
 }
 
-addTask(1000, '1')
-addTask(500, '2')
-addTask(300, '3')
-addTask(400, '4')
+addTask(5000, '1')
+addTask(1000, '2')
+addTask(3000, '3')
+addTask(4000, '4')
 
+// addTask(1000, '1')
+// addTask(500, '2')
+// addTask(300, '3')
+// addTask(400, '4')
 // 输出：2 3 1 4
 // 一开始，1、2 两个任务进入队列
 // 500ms 时，完成 2，输出 2，任务 3 进队

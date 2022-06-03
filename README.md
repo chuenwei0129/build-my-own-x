@@ -10,7 +10,7 @@
 
 ## promise: build-my-own-promise
 
-> [一步一步实现一个 Promise](packages/build-my-own-promise/README.md)
+> [夯实基础：关于 Promise 的一些思考](packages/build-my-own-promise/README.md)
 
 ## vue: build-my-own-vue
 
