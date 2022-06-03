@@ -70,21 +70,21 @@ class MyPromise {
         }
       }
 
-      // resolveGeneralValue(value)
+      resolveGeneralValue(value)
 
       // resolve 参数为 promise 情况
-      if (value instanceof MyPromise) {
-        promiseResolveThenableJob(value).then(
-          val => {
-            if (val instanceof MyPromise) resolve(val)
-            // 我们的栗子走得这，直接 resolve，消耗两次 then
-            else resolveGeneralValue(val)
-          },
-          err => reject(err)
-        )
-      } else {
-        resolveGeneralValue(value)
-      }
+      // if (value instanceof MyPromise) {
+      //   promiseResolveThenableJob(value).then(
+      //     val => {
+      //       if (val instanceof MyPromise) resolve(val)
+      //       // 我们的栗子走得这，直接 resolve，消耗两次 then
+      //       else resolveGeneralValue(val)
+      //     },
+      //     err => reject(err)
+      //   )
+      // } else {
+      //   resolveGeneralValue(value)
+      // }
     }
 
     const reject = reason => {
@@ -178,23 +178,23 @@ MyPromise.resolve = param => {
 }
 
 // 测试 resolve Promise
-new MyPromise(resolve => {
-  let resolvedPromise = MyPromise.resolve()
-  resolve(resolvedPromise)
-}).then(() => {
-  console.log('resolvePromise resolved')
-})
+// new MyPromise(resolve => {
+//   let resolvedPromise = MyPromise.resolve()
+//   resolve(resolvedPromise)
+// }).then(() => {
+//   console.log('resolvePromise resolved')
+// })
 
-MyPromise.resolve()
-  .then(() => {
-    console.log('promise1')
-  })
-  .then(() => {
-    console.log('promise2')
-  })
-  .then(() => {
-    console.log('promise3')
-  })
+// MyPromise.resolve()
+//   .then(() => {
+//     console.log('promise1')
+//   })
+//   .then(() => {
+//     console.log('promise2')
+//   })
+//   .then(() => {
+//     console.log('promise3')
+//   })
 
 // promise1
 // promise2
