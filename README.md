@@ -1,16 +1,12 @@
 # build-my-own-x
 
-## hook: build-my-own-hook
-
-## redux: build-my-own-redux
-
-## axios: build-my-own-axios
-
-<!-- TODO: -->
-
 ## promise: build-my-own-promise
 
 > [夯实基础：关于 Promise 的一些思考](packages/build-my-own-promise/README.md)
+
+## axios: build-my-own-axios
+
+> [源码拾遗：axios —— 极简封装的艺术](packages/build-my-own-axios/README.md)
 
 ## vue: build-my-own-vue
 
@@ -23,6 +19,10 @@
 ## webpack: build-my-own-pack
 
 > [窥探原理：手写一个 JavaScript 打包器](packages/build-my-own-pack/README.md)
+
+<!-- ## hook: build-my-own-hook
+
+## redux: build-my-own-redux -->
 
 ## lerna
 

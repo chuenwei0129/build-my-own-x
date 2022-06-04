@@ -287,7 +287,7 @@ addTask(400, '4')
 
 addTask 依次执行，会依次生成 4 个 add 函数调用栈
 
-![](https://raw.githubusercontent.com/chuenwei0129/my-picgo-repo/master/fe-engineering/SCR-20220604-n8r.png)
+![](https://raw.githubusercontent.com/chuenwei0129/my-picgo-repo/master/fe-engineering/SCR-20220604-nm9.png)
 
 ## 如何停掉 Promise 链
 
