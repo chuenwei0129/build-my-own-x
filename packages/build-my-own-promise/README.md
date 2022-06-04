@@ -23,18 +23,20 @@
 
 ## Promises/A+ 规范实现
 
-📚 术语：
-
-- **promise** 是一个包含 then 方法的对象或函数，**该方法符合规范指定的行为**。
-- **thenable** 是一个包含 then 方法和对象或者函数。
-
 **🎯 实现：**
 
-> 可以点击查看全部源码（包含 promise 常用方法）
+> [可以点击查看全部源码](https://github.com/chuenwei0129/build-my-own-x/blob/main/packages/build-my-own-promise/lib/promise.js)
 
 **🤔 思考：**
 
 **从函数式编程的角度来理解 Promise 的实现：** 把 Promise 看做一个封装了异步数据的 Monad，其 then 接口就相当于这个 Monad 的 map 方法。这样一来，Promise 也可以理解为一个特殊的对象，**这个对象通过一个函数获取数据，并通过另一个函数来操作数据。**
+
+**🦐 常用方法实现：** [lib](https://github.com/chuenwei0129/build-my-own-x/tree/main/packages/build-my-own-promise/lib)
+
+**⚠️ 注意事项：**
+
+- **promise** 是一个包含 then 方法的对象或函数，**该方法符合规范指定的行为**。
+- **thenable** 是一个包含 then 方法和对象或者函数。
 
 ## 如何确定 JS 中链式调用 Promise.then() 的执行顺序问题？
 
@@ -179,11 +181,15 @@ const resolve = value => {
 
 ## Promise 外面改变 Promise 的状态
 
-**知识点：**
+**问：** 如果 Promise 的 resolve, reject 没有执行会怎么样？
+
+**答：** Promise 会永远处于 pending 状态。
+
+**问：** 在 Promise 的外部执行 resolve, reject 可以改变 Promise 的状态吗？
+
+**答：** 可以，其行为如下
 
 ```js
-// axios 的取消功能就是这么做的
-
 let wait
 const f = async function () {
   console.log(`----->`)
@@ -198,6 +204,8 @@ f()
 setTimeout(() => {
   wait()
 }, 2000)
+
+// axios 的取消功能就是这么做的
 ```
 
 **面试题：**
@@ -214,9 +222,6 @@ setTimeout(() => {
 //  当前执行并发不大于 2,立即执行异步操作并从数组中弹出最先 push 的 resolve 改变 Promise 的状态，
 //  由于 Promise 被解决，最初被暂停的代码可以继续执行
 
-//  如果 Promise 的 resolve, reject 没有执行会怎么样？
-//  在 Promise 的外部执行 resolve, reject 可以改变 Promise 的状态吗？
-
 class Scheduler {
   constructor(maxNum) {
     this.taskList = []
@@ -225,8 +230,8 @@ class Scheduler {
   }
 
   async add(promiseCreator) {
-    // 如果当前并发超过最大并发，那就进入任务队列等待
-    if (this.count >= this.maxNum) {
+    // 如果当前并发等于最大并发，那就进入任务队列等待
+    if (this.count === this.maxNum) {
       await new Promise(resolve => {
         this.taskList.push(resolve) // 锁
       })
@@ -242,7 +247,7 @@ class Scheduler {
     // 次数 - 1
     this.count--
 
-    if (this.taskList.length) {
+    if (this.taskList.length > 0) {
       this.taskList.shift()() // 解锁
     }
 
@@ -277,6 +282,12 @@ addTask(400, '4')
 // 1200ms 时，完成 4，输出 4，没有下一个进队的
 // 进队完成，输出 2 3 1 4
 ```
+
+**分析：**
+
+addTask 依次执行，会依次生成 4 个 add 函数调用栈
+
+![](https://raw.githubusercontent.com/chuenwei0129/my-picgo-repo/master/fe-engineering/SCR-20220604-n8r.png)
 
 ## 如何停掉 Promise 链
 
