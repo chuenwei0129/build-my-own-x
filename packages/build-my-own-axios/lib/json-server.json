@@ -1,0 +1,5 @@
+{
+  "port": 80,
+  "watch": true,
+  "no-cors": true
+}

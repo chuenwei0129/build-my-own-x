@@ -18,12 +18,17 @@
     "url": "git+https://github.com/chuenwei0129/c-pack.git"
   },
   "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "test": "json-server --watch --port 8090 --nocors true -H 127.0.0.1 -d 2000 lib/db.json",
+    "mock": "json-server --watch --port 3000 --nocors true -H 127.0.0.1 lib/db.js --routes lib/route.json"
   },
   "bugs": {
     "url": "https://github.com/chuenwei0129/c-pack/issues"
   },
   "devDependencies": {
+    "json-server": "^0.17.0",
     "mockjs": "^1.1.0"
+  },
+  "dependencies": {
+    "qs": "^6.10.3"
   }
 }

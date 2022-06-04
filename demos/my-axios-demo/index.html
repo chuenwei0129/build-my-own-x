@@ -5,80 +5,29 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.10.3/qs.min.js"></script>
+    <script src="../../packages/build-my-own-axios//lib/axios.js"></script>
   </head>
   <body>
-    <button id="btn1">发送请求</button>
-    <button id="btn2">取消请求</button>
+    <h2>测试 axios 取消请求</h2>
+    <div>
+      <button id="btn1">发送请求</button>
+      <button id="btn2">取消请求</button>
+    </div>
 
-    <script src="../../packages/build-my-own-axios/lib/axios.js" type="module"></script>
-
-    <script>
-      const axios = createInstance()
-
-      axios.interceptors.request.use(
-        config => {
-          console.log('成功请求拦截器 1')
-          // 需要把参树通过 promise 链传出去，否则 dispatchRequest 就拿不到参数，请求就会 rejected
-          return config
-        },
-        () => console.log('失败请求拦截器 1')
-      )
-
-      axios.interceptors.request.use(
-        config => {
-          console.log('成功请求拦截器 2')
-          return config
-        },
-        () => console.log('失败请求拦截器 2')
-      )
-
-      axios.interceptors.response.use(
-        res => {
-          console.log('成功响应拦截器 1')
-          // 这里 res 也要传出去。否则最后也拿不到 res ，会返回 undefined
-          return res
-        },
-        () => console.log('失败响应拦截器 1')
-      )
-
-      axios.interceptors.response.use(
-        res => {
-          console.log('成功响应拦截器 2')
-          return res
-        },
-        () => console.log('失败响应拦截器 2')
-      )
-
-      let cancel = null
-
-      const getPosts = () => {
-        console.log('cancel', cancel)
-        // 检测上一个请求是否完成，这个是避免同一请求频繁发起，实现请求的防抖
-        if (cancel !== null) {
-          // 取消上一次请求
-          // 此时 cancel 就是 () => resolve(), cancel 执行，promise 就会改变状态
-          cancel()
-        }
-        axios({
-          method: 'GET',
-          url: 'http://localhost:3000/posts',
-          cancelToken: new axios.cancelToken(c => {
-            cancel = c
-          })
-        }).then(res => {
-          console.log(res)
-          cancel = null
-        })
-      }
-
-      document.querySelector('#btn1').addEventListener('click', getPosts)
-      document.querySelector('#btn2').addEventListener('click', () => {
-        // cancel 可能是 null，也可能是函数
-        cancel && cancel()
-      })
-
-      // 请求防抖，逻辑，第一次进去，cancel = null, 调用 cancelToken 此时把 cancel = () => resolve() 抛出来，此时，abort 处于 pending 在 xhr 中，若果，
-      // cancel() 执行，xhr 会 abort()
-    </script>
+    <h2>测试 axios 增删改查</h2>
+    <div>
+      <label for="user-id">
+        <input id="user-id" type="text" placeholder="输入用户 id" />
+      </label>
+      <button id="search-id">查询</button>
+      <label for="user-name">
+        <input id="user-name" type="text" placeholder="输入新用户名" />
+      </label>
+      <button id="add-btn">添加</button>
+      <br />
+      <ul id="container"></ul>
+    </div>
+    <script src="./app.js"></script>
   </body>
 </html>
