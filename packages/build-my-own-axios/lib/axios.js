@@ -81,7 +81,7 @@ function http(config) {
     xhr.open(method, url)
 
     // 发送合适的请求头信息
-    ;(method === 'POST' || method === 'PUT') &&
+    ;(method === 'POST' || method === 'PATCH') &&
       xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
 
     // 发送请求
@@ -117,7 +117,7 @@ function http(config) {
   })
 }
 
-// 非单例模式
+// 非单例
 function createInstance(config) {
   // 实例化对象，context 不是函数
   let context = new Axios(config)

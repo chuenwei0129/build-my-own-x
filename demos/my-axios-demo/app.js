@@ -69,18 +69,19 @@ const searchId = document.querySelector('#search-id')
 const addBtn = document.querySelector('#add-btn')
 const userId = document.querySelector('#user-id')
 const userName = document.querySelector('#user-name')
+const url = 'http://127.0.0.1:3000/users'
 
 // 查询
 const getUsersById = () => {
   // 用户 axios get 配置
   const getConfig = {
-    url: 'http://127.0.0.1:3000/user_info',
+    url,
     params: {
       id: userId.value
     }
   }
 
-  // 兼容 json-server 的接口（http://127.0.0.1:3000/user_info?id='' 会返回空数组）
+  // 兼容 json-server 的接口（http://127.0.0.1:3000/users?id='' 会返回空数组）
   getConfig.params.id === '' && delete getConfig.params
 
   // 模拟 axios 内部 get 处理
@@ -121,10 +122,8 @@ mounted()
 const addUser = () => {
   // 用户 axios post 配置
   const postConfig = {
-    url: 'http://127.0.0.1:3000/user_info',
+    url,
     method: 'POST',
-    // json-server 接口默认是接收 application/json 格式的数据，所以需要设置 Content-Type
-    // json-server id 为自增，所以不需要传 id，且必须有 id 字段，否则报错
     data: {
       name: userName.value
     }
@@ -147,8 +146,7 @@ addBtn.addEventListener('click', addUser)
 container.addEventListener('click', function (e) {
   if (e.target.className) {
     axios2({
-      // 兼容 json-server 的接口
-      url: 'http://127.0.0.1:3000/user_info/' + e.target.className,
+      url: url + '/' + e.target.className,
       method: 'DELETE'
     }).then(() => {
       mounted()
@@ -161,9 +159,8 @@ container.addEventListener('click', function (e) {
     )
 
     const editConfig = {
-      // 兼容 json-server 的接口
-      url: 'http://127.0.0.1:3000/user_info/' + e.target.id,
-      method: 'PUT',
+      url: url + '/' + e.target.id,
+      method: 'PATCH',
       data: {
         name: user_name
       }
