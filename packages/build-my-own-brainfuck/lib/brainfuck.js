@@ -1,90 +1,130 @@
-function brainLuck(code, input = '') {
-  const inputChars = input.split('')
+const brainFuck = (code, input) => {
+  // brainfuck 的计算模型官方说法格子数目限制为 3000
+  const memo = Array.from({ length: 3000 }, () => 0)
+  const opts = code.split('')
+  const chars = input?.split('')
 
-  const codes = code.split('')
+  // 如果当前指针指向的数据带值为 0，则跳到与之匹配的 ']'
+  const loopStart = () => {
+    // 不满足条件什么都不做
+    if (~~memo[memoIdx] === 0) {
+      let cnt = 1
+
+      while (cnt) {
+        codeIdx++
+        // 嵌套
+        if (opts[codeIdx] === '[') {
+          cnt++
+        }
+        if (opts[codeIdx] === ']') {
+          // 结束循环
+          cnt--
+        }
+      }
+    }
+  }
+
+  // 如果当前指针指向的数据带值不为 0，则跳到与之匹配的 '['
+  const loopEnd = () => {
+    if (~~memo[memoIdx] !== 0) {
+      let cnt = 1
+
+      while (cnt) {
+        codeIdx--
+        if (opts[codeIdx] === ']') {
+          cnt++
+        }
+        if (opts[codeIdx] === '[') {
+          cnt--
+        }
+      }
+    }
+  }
+
+  // 数据存储指针
+  let memoIdx = 0
+  // 程序运行指针
   let codeIdx = 0
+  let output = ''
 
-  const arr = []
-  let arrIdx = 0
-  let outputStr = ''
-
-  while (codeIdx < code.length) {
-    const ops = codes[codeIdx]
-
-    const handleLeftBracket = () => {
-      if (~~arr[arrIdx] === 0) {
-        let cnt = 1
-
-        while (cnt) {
-          codeIdx++
-          if (codes[codeIdx] === '[') {
-            cnt += 1
-          }
-          if (codes[codeIdx] === ']') {
-            cnt -= 1
-          }
-        }
-      }
+  while (codeIdx < opts.length) {
+    // memo 溢出
+    if (memoIdx > 3000) {
+      throw new Error('range error')
     }
-
-    const handleRightBracket = () => {
-      if (~~arr[arrIdx] !== 0) {
-        let cnt = 1
-
-        while (cnt) {
-          codeIdx--
-          if (codes[codeIdx] === ']') {
-            cnt += 1
-          }
-          if (codes[codeIdx] === '[') {
-            cnt -= 1
-          }
-        }
-      }
-    }
-
-    switch (ops) {
+    switch (opts[codeIdx]) {
       case '>':
-        arrIdx += 1
+        memoIdx++
         break
       case '<':
-        arrIdx -= 1
+        memoIdx--
         break
       case '+':
-        arr[arrIdx] = (~~arr[arrIdx] + 1) % 256
+        // ~~undefined === 0
+        // 255 + 1 = 256 % 256 === 0
+        memo[memoIdx] = (~~memo[memoIdx] + 1) % 256
         break
       case '-':
-        arr[arrIdx] = (~~arr[arrIdx] || 256) - 1
+        // '-' : 0 || 256 = 255
+        // '--': 255 - 1 = 254
+        memo[memoIdx] = (~~memo[memoIdx] || 256) - 1
         break
+      // 获取键盘输入的字节流，写入当前数据指针指向的数据带
       case ',':
-        const iptChar = inputChars.shift()
-        arr[arrIdx] = iptChar ? iptChar.charCodeAt(0) : arr[arrIdx]
+        const iptChar = chars?.shift()
+        // 'H'.codePointAt(0) === 72
+        memo[memoIdx] = iptChar ? iptChar.codePointAt(0) : memo[memoIdx]
         break
       case '.':
-        outputStr += String.fromCharCode(arr[arrIdx])
+        // 从 Unicode 码表中取出对应的字符
+        output += String.fromCodePoint(memo[memoIdx])
         break
       case '[':
-        handleLeftBracket()
+        loopStart()
         break
       case ']':
-        handleRightBracket()
+        loopEnd()
+        break
+      default:
         break
     }
 
     codeIdx++
   }
 
-  return outputStr
+  // console.log(memo)
+
+  return output
 }
 
-const code = '>,[>,]<[.<]'
-const input = 'Hello, world!'
+console.log(brainFuck('+++')) // memo: [ 3, 0, 0, 0, 0 ]
+console.log(brainFuck('--')) // memo: [ 254, 0, 0, 0, 0 ]
+console.log(brainFuck(',.>,.>,.', 'CHU')) // 'CHU'
+// 逻辑：'['(不满足条件) -> '>+++<-' -> ']' -> '[' -> '>+++<-' -> ']' -> '[' -> ']'(不满足条件)
+// 循环套路，+++ 第一个格子存储的是循环次数，无计数 +，因为循环次数为 0，所以不会进入循环，无 '-'，无限循环 '+[>++]'
+console.log(brainFuck('+++[>+++>+++++++>+++++<<<-].'))
 
-const output = brainLuck(code, input)
-console.log(output)
+// 'H' === 72
+// 'e' === 101
+// 'l' === 108
+// 'l' === 108
+// 'o' === 111
+// 108 复用 101 格子
 
 console.log(
-  brainLuck(
-    '++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.'
-  )
-)
+  brainFuck(`
+  ++++++++++
+  [
+  >+++++++
+  >++++++++++
+  <<-
+  ]
+  >++.
+  >+.
+  +++++++.
+  .
+  +++.
+`)
+) // 'Hello'
+
+brainFuck('+[>++]')

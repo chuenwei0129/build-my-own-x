@@ -2,7 +2,7 @@
 
 ## typescript: build-my-own-brainfuck
 
->[然并卵系列：来写个 Brainfuck 解释器吧](packages/build-my-own-brainfuck/README.md)
+>[然并卵系列：用 TS 来写个 Brainfuck 解释器吧](packages/build-my-own-brainfuck/README.md)
 
 ## promise: build-my-own-promise
 
