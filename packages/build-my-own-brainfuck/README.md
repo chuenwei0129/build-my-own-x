@@ -19,17 +19,16 @@ BF 作为一种极简的计算机语言，仅有 8 种运算符，分别为: `<`
 
 [什么是图灵完备？](https://www.zhihu.com/question/20115374)
 
-
 ```js
 const brainFuck = (code, input) => {
-  // 定长数据带
-  const memo = Array.from({ length: 5 }, () => 0)
+  // brainfuck 的计算模型官方说法格子数目限制为 3000
+  const memo = Array.from({ length: 3000 }, () => 0)
   const opts = code.split('')
   const chars = input?.split('')
 
   // 如果当前指针指向的数据带值为 0，则跳到与之匹配的 ']'
   const loopStart = () => {
-    // 不满足条件 break
+    // 不满足条件什么都不做
     if (~~memo[memoIdx] === 0) {
       let cnt = 1
 
@@ -71,6 +70,10 @@ const brainFuck = (code, input) => {
   let output = ''
 
   while (codeIdx < opts.length) {
+    // memo 溢出
+    if (memoIdx > 3000) {
+      throw new Error('range error')
+    }
     switch (opts[codeIdx]) {
       case '>':
         memoIdx++
@@ -79,8 +82,6 @@ const brainFuck = (code, input) => {
         memoIdx--
         break
       case '+':
-        // TODO: memo 溢出处理
-        // 假设 memo 无限长
         // ~~undefined === 0
         // 255 + 1 = 256 % 256 === 0
         memo[memoIdx] = (~~memo[memoIdx] + 1) % 256
@@ -106,6 +107,8 @@ const brainFuck = (code, input) => {
       case ']':
         loopEnd()
         break
+      default:
+        break
     }
 
     codeIdx++
@@ -120,7 +123,7 @@ console.log(brainFuck('+++')) // memo: [ 3, 0, 0, 0, 0 ]
 console.log(brainFuck('--')) // memo: [ 254, 0, 0, 0, 0 ]
 console.log(brainFuck(',.>,.>,.', 'CHU')) // 'CHU'
 // 逻辑：'['(不满足条件) -> '>+++<-' -> ']' -> '[' -> '>+++<-' -> ']' -> '[' -> ']'(不满足条件)
-// 循环套路，+++ 第一个格子存储的是循环次数，无计数 +，因为循环次数为 0，所以不会进入循环，无 '-'，无限循环 '+[>++]'
+// 循环套路，+++ 第一个格子存储的是循环次数，无计数 +，或者 , 输入，不会进入循环，无 '-'，无限循环 '+[>++]'
 console.log(brainFuck('+++[>+++>+++++++>+++++<<<-].'))
 
 // 'H' === 72
@@ -145,8 +148,15 @@ console.log(
   +++.
 `)
 ) // 'Hello'
+
+console.log(brainFuck('>,[>,]<[.<]', 'Hello World!')) // '!dlroW olleH'
+
+// 无限循环测试
+brainFuck('+[>++]')
 ```
 
+<!-- // 值类型
+// 引用类型 -->
 - <https://brainfuck-visualizer.herokuapp.com/>
 - [TypeScript 类型体操天花板，用类型运算写一个 Lisp 解释器](https://zhuanlan.zhihu.com/p/427309936)
 - <https://github.com/susisu/typefuck>
