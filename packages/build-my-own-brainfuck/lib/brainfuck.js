@@ -1,6 +1,6 @@
 const brainFuck = (code, input) => {
   // brainfuck 的计算模型官方说法格子数目限制为 3000
-  const memo = Array.from({ length: 3000 }, () => 0)
+  const memo = Array.from({ length: 10 }, () => 0)
   const opts = code.split('')
   const chars = input?.split('')
 
@@ -92,10 +92,12 @@ const brainFuck = (code, input) => {
     codeIdx++
   }
 
-  // console.log(memo)
+  console.log(memo)
 
   return output
 }
+
+console.log(brainFuck('++[>+++[>+++]<<-]'))
 
 console.log(brainFuck('+++')) // memo: [ 3, 0, 0, 0, 0 ]
 console.log(brainFuck('--')) // memo: [ 254, 0, 0, 0, 0 ]

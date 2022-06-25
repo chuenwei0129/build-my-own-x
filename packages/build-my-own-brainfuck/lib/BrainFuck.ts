@@ -7,7 +7,7 @@ namespace BF {
 
   type Add<N1 extends number, N2 extends number> = [...ArrayOf<N1>, ...ArrayOf<N2>]['length']
 
-  type Sub<N1 extends number | never, N2 extends number> = ArrayOf<N1> extends [
+  type Sub<N1 extends number, N2 extends number> = ArrayOf<N1> extends [
     ...ArrayOf<N2>,
     ...infer Rest
   ]
@@ -31,50 +31,77 @@ namespace BF {
     : Mod<Sub<N1, N2>, N2, [...Cnt, unknown]>
 
   // position 从 0 开始，模拟数组 index
-  type SetMemo<Memo, Position extends number, Val> = Memo extends [...infer Rest, infer Last]
+  type SetMemo<Memo extends unknown[], Position extends number, Val> = Memo extends [
+    ...infer Rest,
+    infer Last
+  ]
     ? Memo['length'] extends Add<Position, 1>
       ? [...Rest, Val]
       : [...SetMemo<Rest, Position, Val>, Last]
     : []
 
-  type GetItem<Memo, Position extends number> = Memo extends [...infer Rest, infer Last]
+  type GetItem<Memo extends unknown[], Position extends number> = Memo extends [
+    ...infer Rest,
+    infer Last
+  ]
     ? Memo['length'] extends Add<Position, 1>
       ? Last
       : GetItem<Rest, Position>
     : never
   // 是 never 还是 []，看返回的类型
 
+  type LeftSkip<Code> = Code extends `${infer H}${infer R}`
+    ? H extends '['
+      ? `${H}${R}`
+      : LeftSkip<R>
+    : never
+
+  type RightSkip<Code> = Code extends `${infer H}${infer R}`
+    ? H extends ']'
+      ? `${H}${R}`
+      : RightSkip<R>
+    : never
+
   // I 指针
   // TODO: 减法完善，溢出处理
   type BrainFuck<
     Code,
     Memo = ArrayOf<5>,
-    I extends number = 0
+    I extends number = 0,
+    S extends string = ''
   > = Code extends `${infer H}${infer R}`
     ? H extends `+`
       ? // @ts-ignore 参数默认值问题？
-        BrainFuck<R, SetMemo<Memo, I, Add<GetItem<Memo, I>, 1>>, I>
+        BrainFuck<R, SetMemo<Memo, I, Add<GetItem<Memo, I>, 1>>, I, `${S}${H}`>
       : H extends `-`
       ? // @ts-ignore
-        BrainFuck<R, SetMemo<Memo, I, Sub<GetItem<Memo, I>, 1>>, I>
+        BrainFuck<R, SetMemo<Memo, I, Sub<GetItem<Memo, I>, 1>>, I, `${S}${H}`>
       : H extends `>`
       ? // @ts-ignore
-        BrainFuck<R, Memo, Add<I, 1>>
+        BrainFuck<R, Memo, Add<I, 1>, `${S}${H}`>
       : H extends `<`
       ? // @ts-ignore
-        BrainFuck<R, Memo, Sub<I, 1>>
+        BrainFuck<R, Memo, Sub<I, 1>, `${S}${H}`>
+      : H extends `[`
+      ? // @ts-ignore
+        GetItem<Memo, I> extends 0
+        ? BrainFuck<RightSkip<``>, Memo, I, `${S}${H}`>
+        : BrainFuck<R, Memo, I, `${S}${H}`>
+      : H extends `]`
+      ? // @ts-ignore
+        GetItem<Memo, I> extends 0
+        ? BrainFuck<R, Memo, I, `${S}${H}`>
+        : BrainFuck<LeftSkip<`${S}${H}`>, Memo, I, ''>
+      : H extends `,`
+      ? // @ts-ignore
+        0
       : H extends `.`
       ? // TODO: Ascii code 码表
-        'hello'
+        '1'
       : never
     : Memo
 
-  // 字符串
-  // type StrHead<Str extends string> = Str extends `${infer First}${infer Rest}` ? First : never
-  // type StrTail<Str extends string> = Str extends `${infer First}${infer Rest}` ? Rest : never
-  // type StrMerge<S1, S2> = S1 extends string ? (S2 extends string ? `${S1}${S2}` : never) : never
-
-  type Code = '+++++>++++--<++'
+  type Code = '+++++[>++<-]'
   type Output = BrainFuck<Code>
 
   // 测试代码

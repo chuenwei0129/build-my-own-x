@@ -7,12 +7,12 @@ namespace A {
 
   type InitMemo = ArrayOf<3, [0, 1], 1>
   // 参数保存值
-  type SetMemo<M, I, N = 0> = M extends [...infer Rest, infer Last]
+  type SetMemo<M, I, N> = M extends [...infer Rest, infer Last]
     ? M['length'] extends I
       ? [...Rest, N]
       : [...SetMemo<Rest, I, N>, Last]
     : []
 
   // [0, 100, 0]
-  type Test_Memo = SetMemo<InitMemo, 3>
+  type Test_Memo = SetMemo<InitMemo, 3, 100>
 }
