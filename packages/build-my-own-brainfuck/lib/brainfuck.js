@@ -97,7 +97,7 @@ const brainFuck = (code, input) => {
   return output
 }
 
-console.log(brainFuck('++[>+++[>+++]<<-]'))
+console.log(brainFuck('++[>++[>++<-]<-]'))
 
 console.log(brainFuck('+++')) // memo: [ 3, 0, 0, 0, 0 ]
 console.log(brainFuck('--')) // memo: [ 254, 0, 0, 0, 0 ]
