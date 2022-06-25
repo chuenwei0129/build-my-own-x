@@ -30,7 +30,7 @@ type RemoveIndexSignature<T extends Record<string, any>> = {
 type Test_RemoveIndexSignature = RemoveIndexSignature<{ a: 1; [key: string]: unknown }>
 
 // 可选索引的值为 undefined 和值类型的联合类型。
-type R = Pick<{ a: 1; b?: 2 }, 'b'>
+type Test_KeyB = Pick<{ a: 1; b?: 2 }, 'b'>['b']
 // 因为 b 可能为 undefined，也就是索引类型可能是 {}，所以 {} extends Pick<T, Key> 就能过滤出可选索引。
 type GetOptional<T extends Record<string, any>> = {
   [Key in keyof T as {} extends Pick<T, Key> ? Key : never]: T[Key]

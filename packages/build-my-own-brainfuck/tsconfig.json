@@ -1,9 +1,14 @@
 {
   "compilerOptions": {
-    "module": "es2015",
-    "noImplicitAny": true,
-    "removeComments": true,
-    "preserveConstEnums": true,
-    "sourceMap": true
+    "module": "esnext",
+    "target": "es2017",
+    "lib": ["ESNext"],
+    "strict": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "noUnusedLocals": false,
+    "noImplicitReturns": true,
+    "allowJs": true
   }
 }

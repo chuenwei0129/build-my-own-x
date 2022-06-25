@@ -41,9 +41,9 @@ const brainFuck = (code, input) => {
     }
   }
 
-  // 数据存储指针
+  // 数据带指针
   let memoIdx = 0
-  // 程序运行指针
+  // 循环计数
   let codeIdx = 0
   let output = ''
 

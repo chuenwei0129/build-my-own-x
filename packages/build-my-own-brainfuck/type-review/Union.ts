@@ -46,7 +46,7 @@ type TestIsUnion1 = IsUnion<'a'>
 
 // UnionToIntersection
 // 在 TypeScript 中有函数参数是有逆变的性质的，也就是如果参数可能是多个类型，参数类型会变成它们的交叉类型。
-// 先 A extends B ? (x: A) => void : never 联合类型计算返回联合类型函数
+// 先 A extends B ? (x: A) => void : never 联合类型计算
 // 然后模式匹配取 arg，根据特性返回交叉类型
 type UnionToIntersection<A, B = A> = (A extends B ? (arg: A) => void : never) extends (
   arg: infer R
