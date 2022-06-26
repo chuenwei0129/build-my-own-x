@@ -1,6 +1,12 @@
 # `build-my-own-brainfuck`
 
-## 准备工作
+## 前置知识：Typescript
+
+> [TypeScript 类型体操实战技巧](ts.md)
+
+## BrainFuck
+
+> 🌿 基础知识：[什么是图灵完备？](https://www.zhihu.com/question/20115374)
 
 BF 作为一种极简的计算机语言，仅有 8 种运算符，分别为: `<`、`>`、`+`、`-`、`,`、`.`、`[`、`]`，其功能对照如下表所示：
 
@@ -15,9 +21,11 @@ BF 作为一种极简的计算机语言，仅有 8 种运算符，分别为: `<`
 |  `[`  |           如果指针指向的存储单元为零，向后跳转到对应的 `]` 指令处           |
 |  `]`  |          如果指针指向的存储单元不为零，向前跳转到对应的 `[` 指令处          |
 
-[可视化](https://brainfuck-visualizer.herokuapp.com/#)
+## BF 解释器的 JS 函数实现
 
-[什么是图灵完备？](https://www.zhihu.com/question/20115374)
+**💊 辅助理解：** 一个 Brainfuck 可视化网站：[Brainfuck Visualizer](https://brainfuck-visualizer.herokuapp.com) —— 可以 `run` 一下看看解释器执行的动态过程。
+
+**代码奉上：**
 
 ```js
 const brainFuck = (code, input) => {
@@ -63,17 +71,16 @@ const brainFuck = (code, input) => {
     }
   }
 
-  // 数据存储指针
   let memoIdx = 0
-  // 程序运行指针
   let codeIdx = 0
   let output = ''
 
   while (codeIdx < opts.length) {
-    // memo 溢出
+    // memo 格子溢出处理
     if (memoIdx > 3000) {
       throw new Error('range error')
     }
+
     switch (opts[codeIdx]) {
       case '>':
         memoIdx++
@@ -114,73 +121,34 @@ const brainFuck = (code, input) => {
     codeIdx++
   }
 
-  // console.log(memo)
-
   return output
 }
-
-console.log(brainFuck('+++')) // memo: [ 3, 0, 0, 0, 0 ]
-console.log(brainFuck('--')) // memo: [ 254, 0, 0, 0, 0 ]
-console.log(brainFuck(',.>,.>,.', 'CHU')) // 'CHU'
-// 逻辑：'['(不满足条件) -> '>+++<-' -> ']' -> '[' -> '>+++<-' -> ']' -> '[' -> ']'(不满足条件)
-// 循环套路，+++ 第一个格子存储的是循环次数，无计数 +，或者 , 输入，不会进入循环，无 '-'，无限循环 '+[>++]'
-console.log(brainFuck('+++[>+++>+++++++>+++++<<<-].'))
-
-// 'H' === 72
-// 'e' === 101
-// 'l' === 108
-// 'l' === 108
-// 'o' === 111
-// 108 复用 101 格子
-
-console.log(
-  brainFuck(`
-  ++++++++++
-  [
-  >+++++++
-  >++++++++++
-  <<-
-  ]
-  >++.
-  >+.
-  +++++++.
-  .
-  +++.
-`)
-) // 'Hello'
-
-console.log(brainFuck('>,[>,]<[.<]', 'Hello World!')) // '!dlroW olleH'
-
-// 无限循环测试
-brainFuck('+[>++]')
 ```
 
-<!-- // 值类型
-// 引用类型 -->
-- <https://brainfuck-visualizer.herokuapp.com/>
+**测试代码：** 反转字符串
+
+```js
+console.log(brainFuck('>,[>,]<[.<]', 'Hello World!'))
+```
+
+## BF 解释器的 TS 实现
+
+### 动机
+
+众所周知，TypeScript 拥有一个[图灵完备的类型系统](https://github.com/microsoft/TypeScript/issues/14833)
+
+> **BrainFuck 有一个用处**：一门新语言功能语法很复杂，要用数学证明的方式确定性说明它图灵完备会很麻烦，但只要用这门新语言实现一个 brainfuck的解释器，那么就必然证明了是图灵完备的
+
+### 实现
+
+> TODO
+
+标记一下：'[' 处字符串该传的是完整的字符串，得处理，input 也得处理，老用参数闭包保存变量有点 low 需要换个方式缕一缕。一些 edge  case 也得考虑，先写点别的，换个脑子。
+
+[代码](./lib/BrainFuck.ts)
+
+### 资料
+
 - [TypeScript 类型体操天花板，用类型运算写一个 Lisp 解释器](https://zhuanlan.zhihu.com/p/427309936)
-- <https://github.com/susisu/typefuck>
-- <https://www.lilnong.top/static/html/booklet.html?id=7047524421182947366&sectionIdx=1>
-- [[TypeScript奇技淫巧] union to tuple](https://zhuanlan.zhihu.com/p/58704376)
-
-## 拾人牙慧
-
-- [重新发明 Y 组合子 JavaScript(ES6) 版](http://picasso250.github.io/2015/03/31/reinvent-y.html)
-- [Y不动点组合子用在哪里？](https://www.zhihu.com/question/21099081)
-- [函数式编程的 Y Combinator 有哪些实用价值？](https://www.zhihu.com/question/20115649/answer/14029761)
-
-- [递归思想为什么是编程的基本思想，它效率很高吗？](https://www.zhihu.com/question/271081962)
-- [通用的递归转循环方法](https://zhuanlan.zhihu.com/p/136511316)
-- [尾递归为啥能优化？](https://zhuanlan.zhihu.com/p/36587160)
-- [写给小白的Monad指北](https://zhuanlan.zhihu.com/p/65449477)
-- [学习函数式编程 Monad](https://zhuanlan.zhihu.com/p/306339035)
-- [React 推荐函数组件是纯函数，但是组件有状态就不可能是纯函数，怎么理解有状态的纯函数？](https://www.zhihu.com/question/537538929)
-
-<https://www.zhihu.com/question/345689944/answer/943385371>
-
-<!-- 函数 + 参数 + 环境（闭包） => 返回值 + 环境（闭包）
- ↑    ↑    ↑
-静态   动态   动态
-其中，函数是可以静态编译的，哪怕是匿名函数那也只是匿名，而不是每次执行都要「重新生成」，重新生成的只有「环境（闭包）」，但是在外部环境执行的时候，这个闭包就已经生成了，并不会有多余的开销。
-
-大概明白了，我想应该是这样的。每个函数都会创建一个自身环境，并且自身环境有个指针指向上级环境。而这上下级环境关系是由函数代码定义位置决定的。为了有动态环境(?) js才引入this的概念。 -->
+- [TypeScript 类型元编程：实现8位数的算术运算](https://zhuanlan.zhihu.com/p/85655537)
+- [Type-level Brainfuck interpreter in TypeScript](https://github.com/susisu/typefuck)
