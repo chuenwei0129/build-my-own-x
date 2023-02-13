@@ -4,11 +4,11 @@
 // @ts-nocheck
 
 // 运行 `pnpm t` 测试，注释此行，可以对比原生 Promise 行为
-import { default as Promise } from './promise'
+const Promise = require('./promise')
 
 describe('Promise', () => {
   it('执行器立即执行', () => {
-    const helper = (callback: typeof jest.fn) =>
+    const helper = (callback) =>
       new Promise(() => {
         callback()
       })
@@ -305,6 +305,19 @@ describe('Promise', () => {
       .then()
       .then(undefined, (r) => {
         expect(r.message).toBe('886')
+      })
+  })
+
+  it('then 第二个参数传递函数, 出错时, promise 链会丢失 then1 的错误, promise 链 then2 恢复正确', () => {
+    const helper = () =>
+      new Promise(() => {
+        throw new Error('886')
+      })
+
+    return helper()
+      .then(undefined, () => 520)
+      .then((data) => {
+        expect(data).toBe(520)
       })
   })
 })
