@@ -1,0 +1,23 @@
+{
+  "name": "build-my-own-webpack",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/pack.js",
+  "bin": {
+    "pack": "src/pack.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/generator": "^7.18.2",
+    "@babel/parser": "^7.18.3",
+    "@babel/traverse": "^7.18.2",
+    "@babel/types": "^7.18.2",
+    "ejs": "^3.1.8",
+    "tapable": "^2.2.1"
+  }
+}
