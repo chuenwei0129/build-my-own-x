@@ -12,11 +12,11 @@
 
 ## react: build-my-own-react
 
-> [温故知新：手写迷你 react 15](./build-my-own-react-15/README.md)
+> [温故知新：手写迷你 react 15](./build-my-own-react/README.md)
 
-## webpack: build-my-own-pack
+## webpack: build-my-own-webpack
 
-> [窥探原理：手写一个 JavaScript 打包器](./build-my-own-pack/README.md)
+> [窥探原理：手写一个 JavaScript 打包器](./build-my-own-webpack/README.md)
 
 ## axios: build-my-own-axios
 
