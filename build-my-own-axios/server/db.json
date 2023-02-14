@@ -1,0 +1,42 @@
+{
+  "posts": [
+    {
+      "id": 1,
+      "title": "json-server",
+      "author": "acc"
+    },
+    {
+      "id": "4",
+      "title": "css",
+      "author": "authorX"
+    },
+    {
+      "id": "100",
+      "title": "css",
+      "author": "authorX"
+    },
+    {
+      "id": "99",
+      "title": "css",
+      "author": "authorX"
+    },
+    {
+      "id": "999",
+      "user_name": "css"
+    },
+    {
+      "id": "9",
+      "user_name": "css"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    }
+  ],
+  "profile": {
+    "name": "acc"
+  }
+}

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.10.3/qs.min.js"></script>
+    <script src="../src/axios.js"></script>
+  </head>
+  <body>
+    <h2>运行命令 <code>npm run test:cancel</code> 测试手写 axios 取消请求</h2>
+    <div>
+      <button id="btn1">发送请求</button>
+      <button id="btn2">取消请求</button>
+    </div>
+
+    <h2>运行命令 <code>npm run test:axios</code> 测试手写 axios 增删改查</h2>
+    <div>
+      <label for="user-id">
+        <input id="user-id" type="text" placeholder="输入用户 id" />
+      </label>
+      <button id="search-id">查询</button>
+      <label for="user-name">
+        <input id="user-name" type="text" placeholder="输入新用户名" />
+      </label>
+      <button id="add-btn">添加</button>
+      <br />
+      <ul id="container"></ul>
+    </div>
+    <script src="./app.js"></script>
+  </body>
+</html>

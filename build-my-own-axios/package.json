@@ -1,0 +1,17 @@
+{
+  "name": "build-my-own-axios",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test:cancel": "json-server --watch --port 8090 --nocors true -H 127.0.0.1 -d 2000 server/db.json",
+    "test:axios": "json-server --watch --port 3000 --nocors true -H 127.0.0.1 server/db.js --routes server/route.json"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "json-server": "^0.17.1",
+    "mockjs": "^1.1.0"
+  }
+}
