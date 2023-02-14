@@ -1,4 +1,4 @@
-# 免费承包 Promise 相关问题
+# 夯实基础：关于 Promise 的一些思考
 
 ## Promises/A+ 规范实现
 
@@ -319,7 +319,7 @@ addTask 依次执行，会依次生成 4 个 add 函数调用栈
 
 直接返回一个始终不 resolve 也不 reject 的 Promise，即这个 Promise 永远处于 pending 状态，那么后面的 Promise 链当然也就一直不会执行了，因为会一直等着。
 
-## 参考资料
+## 好文章
 
 - [100 行代码实现 Promises/A+ 规范](https://zhuanlan.zhihu.com/p/83965949)
 - [如何确定 JS 中链式调用 Promise.then() 的执行顺序问题？](https://www.zhihu.com/question/323269739/answer/675546467)
