@@ -1,51 +1,18 @@
-const p1 = new Promise((resolve, reject) => {
-  setTimeout(() => {
-    resolve('p1')
-  }, 1000)
-})
+const Promise = require('./resolve')
 
-p1.then()
-  // 相当于没有 finally 这一段，p1 按原来方式正常执行
-  .finally(() => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        // 被忽略
-        resolve(100)
-      }, 2000)
-    })
-  })
-  .then(val => console.log(val))
-
-// 无论当前 Promise 是成功还是失败，调用 finally 之后都会执行 finally 中传入的函数，并且将值原封不动的往下传。
-const MyPromise = require('./promise')
-
-MyPromise.prototype.finally = function (cb) {
+Promise.prototype.finally = function (finallyCallback) {
   return this.then(
-    data => {
-      return MyPromise.resolve(cb()).then(() => data)
+    (data) => {
+      // finallyCallback() 返回值被忽略，不参与 promise 链，只是执行函数，原来的 promise 链上的值原封不动的往下传
+      // 原来的 promise 链是啥样还是啥样，只是多了一段必执行的回调函数（思维上不考虑它就行）
+      return Promise.resolve(finallyCallback()).then(() => data)
     },
-    r => {
-      return MyPromise.resolve(cb()).then(() => {
+    (r) => {
+      return Promise.resolve(finallyCallback()).then(() => {
         throw r
       })
     }
   )
 }
 
-const p2 = new MyPromise((resolve, reject) => {
-  setTimeout(() => {
-    resolve('p2')
-  }, 1000)
-})
-
-p2.then()
-  // 相当于没有 finally 这一段，p1 按原来方式正常执行
-  .finally(() => {
-    return new MyPromise((resolve, reject) => {
-      setTimeout(() => {
-        // 被忽略
-        resolve(100)
-      }, 2000)
-    })
-  })
-  .then(val => console.log(val))
+module.exports = Promise

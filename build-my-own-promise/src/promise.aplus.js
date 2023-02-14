@@ -152,7 +152,16 @@ class MyPromise {
   }
 }
 
-// aplus 测试代码
+// 辅助测试 resolveParamIsPromise，与 aplus 测试代码无关
+MyPromise.resolve = (p) => {
+  return p instanceof MyPromise
+    ? p
+    : new MyPromise((resolve) => {
+        resolve(p)
+      })
+}
+
+// aplus 测试套件
 MyPromise.defer = MyPromise.deferred = function () {
   const dfd = {}
   dfd.promise = new MyPromise((resolve, reject) => {

@@ -45,7 +45,7 @@ class Scheduler {
       // 当 task 1 或 task 2 执行完毕 task 2，就会解除第一把锁，让 task 3 执行
       // 当 task 1 或 task 3 执行完毕 task 3，就会解除第二把锁，让 task 4 执行
       // 一共 8000 ms
-      await new Promise(resolve => {
+      await new Promise((resolve) => {
         this.taskList.push(resolve) // 锁
       })
     }
@@ -69,8 +69,8 @@ class Scheduler {
   }
 }
 
-const timeout = time => {
-  return new Promise(resolve => {
+const timeout = (time) => {
+  return new Promise((resolve) => {
     setTimeout(() => {
       resolve()
     }, time)

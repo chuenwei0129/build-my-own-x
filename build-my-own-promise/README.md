@@ -11,6 +11,8 @@
 
 ### 测试驱动开发
 
+![20230214110800](https://raw.githubusercontent.com/chuenwei0129/my-picgo-repo/master/others/20230214110800.png)
+
 **📒 用例文档化：**
 
 > 单测里的每个用例都可以看成一个最小的 example，通过阅读 Test Case 就能马上知道这个函数怎么使用了。
@@ -144,6 +146,9 @@ Promise.resolve()
 > 传递给 resolve 函数的参数表示延迟动作的最终值，可以是实际的值，也可以是其他 Promise 对象，如果是 Promise，则当该 Promise 对象 fulfilled 之后将向 resolve 函数提供最终值。
 
 在我们实现的 promise 上添加如下内容，可以实现与 ES2015 Promises 等价的效果。
+
+- [点击查看全部源码](./src/promise.es.js)
+- [点击查看对比测试](./src/resolveParamIsPromise.js)
 
 ```js
 // 添加外部工具函数 promiseResolveThenableJob
@@ -323,3 +328,4 @@ addTask 依次执行，会依次生成 4 个 add 函数调用栈
 - [Promise 自己知道被 await 或者被 then 了吗？](https://www.zhihu.com/question/470685155/answer/1985714247)
 - [一直没有 resolve 也没有 reject 的 Promise 会造成内存泄露吗？](https://www.zhihu.com/question/386595851)
 - [永不 resolve / reject 的 Promise 会导致内存泄漏吗？](https://zhuanlan.zhihu.com/p/385764204)
+- [手写 p-limit，40 行代码实现并发控制](https://zhuanlan.zhihu.com/p/604178057)
