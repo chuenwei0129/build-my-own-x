@@ -1,5 +1,9 @@
 # 夯实基础：关于 Promise 的一些思考
 
+> 每次发现自己做半天做不出来的东西，原来早就在某些经典文献的犄角旮旯里被用两三句话说清楚时，我都会怀疑起自己存在的意义。
+
+**绝佳好文章：**[100 行代码实现 Promises/A+ 规范](https://zhuanlan.zhihu.com/p/83965949)
+
 ## Promises/A+ 规范实现
 
 > 实际上，Promises/A+ 规范，内容简短，实现难度低。其中充斥着细节行为的描述，缺乏设计目的和背景的部分，完全没有介绍使用场景。并不是一个入门 Promises 的好材料。
@@ -321,7 +325,6 @@ addTask 依次执行，会依次生成 4 个 add 函数调用栈
 
 ## 好文章
 
-- [100 行代码实现 Promises/A+ 规范](https://zhuanlan.zhihu.com/p/83965949)
 - [如何确定 JS 中链式调用 Promise.then() 的执行顺序问题？](https://www.zhihu.com/question/323269739/answer/675546467)
 - [求前端大佬解析这道 Promise 题，为啥 resolved 是在 promise2 之后输出?](https://www.zhihu.com/question/430549238)
 - [Promise 外面改变 Promise 的状态](https://juejin.cn/post/6844903985674108942)
