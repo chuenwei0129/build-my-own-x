@@ -63,7 +63,9 @@ Object.defineProperty({}, 'num', {
 **也可以：**
 
 ```js
+// 外部变量
 let value = 1
+
 Object.defineProperty({}, 'num', {
   get() {
     return value
@@ -80,10 +82,10 @@ Object.defineProperty({}, 'num', {
 
 ```js
 // 报错
+// TypeError: Invalid property descriptor. Cannot both specify accessors and a value or writable attribute, #<Object>
 Object.defineProperty({}, 'num', {
   value: 1,
   get() {
-    // this === {}
     // this.value 取不到 value
     return 1
   }
@@ -177,7 +179,7 @@ reactiveData.arr[4] = 2
 
 ## 核心逻辑：响应式原理
 
-> 同样可使用 live-server 测试
+> 同样使用 live-server 测试
 
 ```html
 <!DOCTYPE html>
@@ -187,7 +189,6 @@ reactiveData.arr[4] = 2
     <button id="btn">+</button>
 
     <script>
-      // 观察者模式
       const el = document.querySelector('#app')
       const data = { num: 0 }
 
@@ -195,7 +196,6 @@ reactiveData.arr[4] = 2
 
       function reactive(data) {
         for (let [k, v] of Object.entries(data)) {
-          // 为每个属性都添加 getter 和 setter 和 Observer 建立响应式
           let dep = []
           if (typeof v === 'object' && v !== null) reactive(v)
           Object.defineProperty(data, k, {
@@ -213,6 +213,7 @@ reactiveData.arr[4] = 2
         return data
       }
 
+      // Vue 的 data 上的属性会被添加 getter 和 setter 属性
       const vmData = reactive(data)
 
       const watcher = fn => {
@@ -221,9 +222,15 @@ reactiveData.arr[4] = 2
         target = null
       }
 
-      watcher(() => {
+      // 当 Vue Component render 函数被执⾏的时候，data 上会被触碰(touch)，即被读，getter ⽅法会被调⽤，此时 Vue 会去记录此 Vue component 所依赖的所有 data(这⼀过程被称为依赖收集)
+      // vue 2.0 更新组件是通过 dom diff 更新的，依赖收集仅提供通知作用
+      const render = () => {
         el.innerHTML = `<h1>${vmData.num}</h1>`
-      })
+      }
+
+      // watcher 立即执行
+      // 任何⼀个 Vue Component 都有⼀个与之对应的 Watcher 实例
+      watcher(render)
 
       watcher(() => {
         console.log(`当前 num 的值：${vmData.num}`)
@@ -232,6 +239,7 @@ reactiveData.arr[4] = 2
       const btn = document.querySelector('#btn')
 
       btn.addEventListener('click', () => {
+        // data 被改动时(主要是⽤户操作)，setter ⽅法会被调⽤，此时 Vue 会 **去通知所有依赖于此 data 的组件（包括依赖父组件 props 的子组件）** 去调⽤他们的 render 函数进⾏更新 ==> dep.forEach(watcher => watcher())
         vmData.num++
       })
     </script>
