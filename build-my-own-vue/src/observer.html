@@ -9,12 +9,11 @@
       const el = document.querySelector('#app')
       const data = { num: 0 }
 
-      // 标识每个属性对应一个观察者模式
-      let target
+      // 全局变量
+      let target = null
 
       function reactive(data) {
         for (let [k, v] of Object.entries(data)) {
-          // 为每个属性都添加 getter 和 setter 和 Observer 建立响应式
           let dep = []
           if (typeof v === 'object' && v !== null) reactive(v)
           Object.defineProperty(data, k, {
@@ -25,8 +24,8 @@
             set(newV) {
               if (typeof newV === 'object' && newV !== null) reactive(newV)
               v = newV
-              dep.forEach(watcher => watcher())
-            }
+              dep.forEach((watcher) => watcher())
+            },
           })
         }
         return data
@@ -34,12 +33,14 @@
 
       const vmData = reactive(data)
 
-      const watcher = fn => {
+      const watcher = (fn) => {
         target = fn
         fn()
         target = null
       }
 
+      // watcher 会在初始化的时候执行
+      // 此处是整个程序最先执行的地方
       watcher(() => {
         el.innerHTML = `<h1>${vmData.num}</h1>`
       })
