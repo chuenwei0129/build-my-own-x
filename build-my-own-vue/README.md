@@ -9,7 +9,7 @@
 
 ## 测试用例
 
-**在 [`examples`](./examples/) 目录中：** 使用 [live-server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) 启 [index.html] 测试。
+**在 [`examples`](./examples/) 目录中：** 使用 [live-server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) 启动 `index.html` 测试。
 
 ## 前置知识：Object.defineProperty
 
