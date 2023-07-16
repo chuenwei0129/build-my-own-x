@@ -223,7 +223,7 @@ reactiveData.arr[4] = 2
       }
 
       // 当 Vue Component render 函数被执⾏的时候，data 上会被触碰(touch)，即被读，getter ⽅法会被调⽤，此时 Vue 会去记录此 Vue component 所依赖的所有 data(这⼀过程被称为依赖收集)
-      // vue 2.0 更新组件是通过 dom diff 更新的，依赖收集仅提供通知作用
+      // render 会执行 10 次，渲染 10 次显然不合理，vue 通过 nextTick 解决
       const render = () => {
         el.innerHTML = `<h1>${vmData.num}</h1>`
       }
@@ -240,7 +240,9 @@ reactiveData.arr[4] = 2
 
       btn.addEventListener('click', () => {
         // data 被改动时(主要是⽤户操作)，setter ⽅法会被调⽤，此时 Vue 会 **去通知所有依赖于此 data 的组件（包括依赖父组件 props 的子组件）** 去调⽤他们的 render 函数进⾏更新 ==> dep.forEach(watcher => watcher())
-        vmData.num++
+        for (let i = 0; i < 10; i++) {
+          vmData.num++
+        }
       })
     </script>
   </body>
