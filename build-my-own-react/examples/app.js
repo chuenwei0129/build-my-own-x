@@ -1,43 +1,40 @@
-// js 后缀需要添加否则会 404 无法测试
-import ReactDOM from '../src/creact-dom.js'
-import React from '../src/creact.js'
+// js 后缀需要添加否则会 404
+import ReactDOM from '../src/react-dom.js'
+import React from '../src/react.js'
 
-// jsx 编译为 React.createElement('div', {className: 'box'}, 'hello world')
+// jsx 编译为 React.createElement(...)
 // createElement 返回值为 reactElement
-// render 接受 reactElement 为参数，React 元素可以是文本节点、原生 DOM 元素（包含属性，文本，子元素）、组件（返回值为 原生 DOM 元素或文本节点）
 
-/**
- * 渲染
- */
+// 1.0 渲染文本或数字
+// const text = 'hello creact'
+// ReactDOM.render(text, document.getElementById('root'))
 
-// 文本节点
-// const text = 'hello world'
-
-// DOM 元素
-// const DomElement = React.createElement(
+// 2.0 渲染 DOM 元素
+// const element = React.createElement(
 //   'div',
 //   {
-//     className: 'box',
-//     id: 'box',
-//     onClick: () => alert('hello world'),
+//     className: 'test',
+//     id: 'test',
 //     style: {
 //       backgroundColor: '#ccc',
-//       color: 'yellow'
-//     }
+//       color: 'yellow',
+//     },
+//     onClick: () => alert('hello world'),
 //   },
 //   React.createElement(
 //     'b',
 //     {
 //       style: {
-//         color: 'blue'
-//       }
+//         color: 'blue',
+//       },
 //     },
 //     'JavaScript'
 //   ),
 //   ' is turning 25!'
 // )
+// ReactDOM.render(element, document.getElementById('root'))
 
-// 组件
+// 3.0 渲染组件
 // class Counter extends React.Component {
 //   constructor(props) {
 //     super(props)
@@ -57,13 +54,31 @@ import React from '../src/creact.js'
 //   }
 
 //   render() {
-//     const h1 = React.createElement('h1', { style: { color: 'yellow' } }, this.props.name)
+//     const h1 = React.createElement(
+//       'h1',
+//       { style: { color: 'yellow' } },
+//       this.props.name
+//     )
 
-//     const counter = React.createElement('div', { style: { color: 'red' } }, this.state.count)
-//     const btn = React.createElement('button', { onClick: this.handleClick }, ' + ')
+//     const counter = React.createElement(
+//       'div',
+//       { style: { color: 'red' } },
+//       this.state.count
+//     )
 
-//     // 根 div 元素的 react_id 为 '0'
-//     return React.createElement('div', { style: { backgroundColor: 'grey' } }, h1, counter, btn)
+//     const btn = React.createElement(
+//       'button',
+//       { onClick: this.handleClick },
+//       ' + '
+//     )
+
+//     return React.createElement(
+//       'div',
+//       { style: { backgroundColor: 'grey' } },
+//       h1,
+//       counter,
+//       btn
+//     )
 //   }
 // }
 
@@ -78,11 +93,12 @@ import React from '../src/creact.js'
 //   }
 // }
 
-/**
- * 更新
- */
+// ReactDOM.render(
+//   React.createElement(CounterBox),
+//   document.getElementById('root')
+// )
 
-// 文本节点
+// 4.0 更新文本
 // class Counter extends React.Component {
 //   constructor(props) {
 //     super(props)
@@ -101,7 +117,9 @@ import React from '../src/creact.js'
 //   }
 // }
 
-// dom 元素属性及文本更新
+// ReactDOM.render(React.createElement(Counter), document.getElementById('root'))
+
+// 5.0 dom 元素属性及文本更新
 // class Counter extends React.Component {
 //   constructor(props) {
 //     super(props)
@@ -114,7 +132,11 @@ import React from '../src/creact.js'
 //   }
 
 //   render() {
-//     const h1 = React.createElement('h1', { style: { color: 'yellow' } }, this.props.name)
+//     const h1 = React.createElement(
+//       'h1',
+//       { style: { color: 'yellow' } },
+//       '计数器'
+//     )
 
 //     const counter = React.createElement(
 //       'p',
@@ -122,12 +144,19 @@ import React from '../src/creact.js'
 //       this.state.count
 //     )
 
-//     const btn = React.createElement('button', { onClick: this.handleClick }, ' + ')
+//     const btn = React.createElement(
+//       'button',
+//       { onClick: this.handleClick },
+//       ' + '
+//     )
 
-//     // 根 div 元素的 react_id 为 '0'
 //     return React.createElement(
 //       'div',
-//       { style: { backgroundColor: (this.state.count & 1) === 0 ? 'green' : 'grey' } },
+//       {
+//         style: {
+//           backgroundColor: (this.state.count & 1) === 0 ? 'green' : 'grey',
+//         },
+//       },
 //       h1,
 //       counter,
 //       btn
@@ -135,6 +164,9 @@ import React from '../src/creact.js'
 //   }
 // }
 
+// ReactDOM.render(React.createElement(Counter), document.getElementById('root'))
+
+// 6.0 更新组件
 class Counter extends React.Component {
   constructor(props) {
     super(props)
@@ -143,7 +175,7 @@ class Counter extends React.Component {
   }
 
   componentDidMount() {
-    setTimeout(() => {
+    setInterval(() => {
       this.setState({ flag: !this.state.flag })
     }, 2000)
   }
@@ -161,7 +193,7 @@ class Counter extends React.Component {
     const list2 = React.createElement(
       'ul',
       null,
-      React.createElement('span', { key: 'A', style: { color: 'blue' } }, 'A1'),
+      React.createElement('li', { key: 'A', style: { color: 'blue' } }, 'A1'),
       React.createElement('li', { key: 'C' }, 'C1'),
       React.createElement('li', { key: 'B' }, 'B'),
       React.createElement('li', { key: 'E' }, 'E1'),

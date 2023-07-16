@@ -1,15 +1,20 @@
-import { ReactElement } from './creactElement.js'
+import { ReactElement } from './createElement.js'
 
-// jsx 同级比较
-export function shouldDeepCompare(oldElement, newElement) {
-  if (oldElement != null || newElement != null) {
+// vnode 同级比较
+export function shouldDeepCompare(oldEReactlement, newReactElement) {
+  if (oldEReactlement != null || newReactElement != null) {
     if (
-      (typeof oldElement === 'string' || typeof oldElement === 'number') &&
-      (typeof newElement === 'string' || typeof newElement === 'number')
+      (typeof oldEReactlement === 'string' ||
+        typeof oldEReactlement === 'number') &&
+      (typeof newReactElement === 'string' ||
+        typeof newReactElement === 'number')
     ) {
       return true
-    } else if (oldElement instanceof ReactElement && newElement instanceof ReactElement) {
-      return oldElement.type === newElement.type
+    } else if (
+      oldEReactlement instanceof ReactElement &&
+      newReactElement instanceof ReactElement
+    ) {
+      return oldEReactlement.type === newReactElement.type
     }
   }
 }
