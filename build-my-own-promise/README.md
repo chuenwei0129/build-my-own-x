@@ -1,8 +1,8 @@
 # 夯实基础：关于 Promise 的一些思考
 
 > 每次发现自己做半天做不出来的东西，原来早就在某些经典文献的犄角旮旯里被用两三句话说清楚时，我都会怀疑起自己存在的意义。
-
-**绝佳好文章：**[100 行代码实现 Promises/A+ 规范](https://zhuanlan.zhihu.com/p/83965949)
+>
+> [100 行代码实现 Promises/A+ 规范](https://zhuanlan.zhihu.com/p/83965949)
 
 ## Promises/A+ 规范实现
 
@@ -202,6 +202,44 @@ const resolve = value => {
 **从源码实现上来看：**`resolve(resolvedPromise)` 会消耗两个 then 时序后在执行 `.then(() => {
   console.log('resolvePromise resolved')
 })`
+
+## then 里面返回 promise，实际上跟 `new Promise` 中 `resolve(promise)` 是一样的，推迟两个时序
+
+先用我们自己的 Promise 运行：
+
+```js
+Promise.resolve()
+  .then(() => {
+    console.log(0)
+    return Promise.resolve(4)
+  })
+  .then((res) => {
+    console.log(res)
+  })
+
+Promise.resolve()
+  .then(() => {
+    console.log(1)
+  })
+  .then(() => {
+    console.log(2)
+  })
+  .then(() => {
+    console.log(3)
+  })
+  .then(() => {
+    console.log(5)
+  })
+  .then(() => {
+    console.log(6)
+  })
+```
+
+执行结果：`0`、`1`、`2`、`4`、`3`、`5`、`6`。
+
+这里我们手写版本和 原生 Promise 不一样，原生执行结果：`0`、`1`、`2`、`3`、`4`、`5`、`6`。
+
+原生 `promise.then` 里面返回 promise，实际上跟 `new Promise` 中 `resolve(promise)` 是一样的，**推迟两个时序**。我们手写的版本，仔细分析代码仅消耗 1 个时序，我也搞不明白这里为什么要消耗 2 个时序，牢记就是。
 
 ## Promise 外改变 Promise 的状态
 
